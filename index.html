@@ -54,48 +54,78 @@ body { background-color: #050508; background-image: radial-gradient(circle at 50
 </div>
 
 <script>
-document.getElementById('nrg-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('btn-submit');
-    const status = document.getElementById('ai-status');
-    
-    const dados = {
-        nome: document.getElementById('nome').value,
-        discord: document.getElementById('discord').value,
-        cargo: document.getElementById('cargo').value,
-        portfolio: document.getElementById('portfolio').value,
-        motivo: document.getElementById('motivo').value
-    };
+const DATA_LIMITE = new Date("2026-07-07T20:00:00-03:00").getTime();
 
-    btn.disabled = true;
-    status.style.display = "block";
-    status.style.color = "#d8b4fe";
-    status.textContent = "CONECTANDO AO SERVIDOR SEGURO DA NRG...";
+const form = document.getElementById('nrg-form');
+const btn = document.getElementById('btn-submit');
+const status = document.getElementById('ai-status');
 
-    try {
-        // Envia os dados para o seu servidor oculto
-        const response = await fetch('/api/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dados)
-        });
+function verificarBloqueios() {
+    const agora = new Date().getTime();
 
-        const resultado = await response.json();
-
-        if (response.ok) {
-            status.style.color = "#00ff88";
-            status.textContent = "ENVIADO COM SUCESSO! STATUS: " + resultado.statusIA;
-            btn.textContent = "CANDIDATURA CONCLUÍDA";
-        } else {
-            throw new Error(resultado.error || "Erro desconhecido");
-        }
-    } catch (error) {
-        status.style.color = "#ff3366";
-        status.textContent = "ERRO: " + error.message;
-        btn.disabled = false;
-        btn.textContent = "TENTAR NOVAMENTE";
+    if (agora > DATA_LIMITE) {
+        form.innerHTML = `
+            <div style="text-align:center; padding: 20px;">
+                <h2 style="color: #ff3366; font-size: 24px; margin-bottom: 10px;">SISTEMA ENCERRADO</h2>
+                <p style="color: #c0c0d0; font-size: 14px;">O prazo oficial de recrutamento da NRG Studios terminou.</p>
+            </div>`;
+        return true;
     }
-});
+
+    if (localStorage.getItem('nrg_candidatura_enviada')) {
+        form.innerHTML = `
+            <div style="text-align:center; padding: 20px;">
+                <h2 style="color: #00ff88; font-size: 24px; margin-bottom: 10px;">CANDIDATURA REGISTRADA</h2>
+                <p style="color: #c0c0d0; font-size: 14px;">Nossa Inteligência Artificial já processou a sua ficha e enviou para a diretoria. Aguarde o nosso contato.</p>
+            </div>`;
+        return true;
+    }
+    return false;
+}
+
+if (!verificarBloqueios()) {
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const dados = {
+            nome: document.getElementById('nome').value,
+            discord: document.getElementById('discord').value,
+            cargo: document.getElementById('cargo').value,
+            portfolio: document.getElementById('portfolio').value,
+            motivo: document.getElementById('motivo').value
+        };
+
+        btn.disabled = true;
+        status.style.display = "block";
+        status.style.color = "#d8b4fe";
+        status.textContent = "CONECTANDO AO SERVIDOR SEGURO DA NRG...";
+
+        try {
+            const response = await fetch('/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+
+            const resultado = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('nrg_candidatura_enviada', 'true');
+                status.style.color = "#00ff88";
+                status.textContent = "ENVIADO COM SUCESSO! STATUS: " + resultado.statusIA;
+                btn.textContent = "CANDIDATURA CONCLUÍDA";
+                setTimeout(() => { verificarBloqueios(); }, 2500);
+            } else {
+                throw new Error(resultado.error || "Erro desconhecido");
+            }
+        } catch (error) {
+            status.style.color = "#ff3366";
+            status.textContent = "ERRO: " + error.message;
+            btn.disabled = false;
+            btn.textContent = "TENTAR NOVAMENTE";
+        }
+    });
+}
 </script>
 </body>
 </html>
