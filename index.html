@@ -65,10 +65,23 @@ section { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
 .submit-btn:disabled { background: #333; cursor: not-allowed; transform: none; box-shadow: none; color: #888; }
 .status-msg { text-align: center; margin-top: 15px; font-size: 12px; font-weight: bold; display: none; text-transform: uppercase; letter-spacing: 1px; }
 
+/* Botão Flutuante do Discord */
+.discord-float { position: fixed; bottom: 30px; right: 30px; background-color: #5865F2; color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 20px rgba(88, 101, 242, 0.4); z-index: 1000; text-decoration: none; font-size: 28px; font-weight: bold; transition: 0.3s; }
+.discord-float:hover { transform: scale(1.1) rotate(5deg); box-shadow: 0 15px 25px rgba(88, 101, 242, 0.6); }
+
+/* Responsividade Extrema */
 @media (max-width: 768px) {
     header h1 { font-size: 42px; }
     .countdown { flex-wrap: wrap; justify-content: center; gap: 10px; }
     .nav-links { display: none; }
+    nav { padding: 15px 20px; }
+}
+@media (max-width: 400px) {
+    header h1 { font-size: 32px; }
+    .time-box { min-width: 70px; padding: 10px; }
+    .time-box span { font-size: 24px; }
+    .form-container { padding: 25px 15px; }
+    .discord-float { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 20px; }
 }
 </style>
 </head>
@@ -152,12 +165,15 @@ section { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
     </div>
 </section>
 
+<a href="https://discord.gg/EnMSN4zaRC" target="_blank" class="discord-float" title="Suporte no Discord">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16"><path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/></svg>
+</a>
+
 <footer style="text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px;">
     <p style="color: var(--text-muted); font-size: 14px;">© 2026 NRG Studios. Todos os direitos reservados.</p>
 </footer>
 
 <script>
-// --- CONTAGEM REGRESSIVA ---
 const dataFinal = new Date("2026-07-17T23:59:59-03:00").getTime();
 const timerInterval = setInterval(function() {
     const agora = new Date().getTime();
@@ -173,19 +189,15 @@ const timerInterval = setInterval(function() {
     document.getElementById("segundos").innerText = Math.floor((distancia % (1000 * 60)) / 1000).toString().padStart(2, '0');
 }, 1000);
 
-// --- LÓGICA DE INTERFACE ---
 function verificarModalidade() {
     const modal = document.getElementById('modalidade').value;
     document.getElementById('campo_equipe').style.display = (modal === "Equipe") ? "block" : "none";
     if (modal !== "Equipe") document.getElementById('membros_equipe').value = "";
 }
 
-// --- VERIFICAÇÃO DE PRAZO GLOBAL ---
-function isEncerrado() {
-    return new Date().getTime() > dataFinal;
-}
+function isEncerrado() { return new Date().getTime() > dataFinal; }
 
-// --- ENVIO DA INSCRIÇÃO ---
+// --- INSCRIÇÃO ---
 const formInscricao = document.getElementById('jam-inscricao');
 const btnInscricao = document.getElementById('btn-inscricao');
 const statusInscricao = document.getElementById('status-inscricao');
@@ -198,12 +210,13 @@ if (localStorage.getItem('nrg_jam_inscrito')) {
     formInscricao.addEventListener('submit', async function(e) {
         e.preventDefault();
         btnInscricao.disabled = true;
+        btnInscricao.style.cursor = "wait";
         statusInscricao.style.display = "block";
         statusInscricao.style.color = "#00b8ff";
-        statusInscricao.textContent = "PROCESSANDO INSCRIÇÃO...";
+        statusInscricao.textContent = "CONECTANDO AO SERVIDOR...";
 
         const dados = {
-            tipo: 'inscricao', // IDENTIFICADOR PARA O SERVIDOR
+            tipo: 'inscricao',
             modalidade: document.getElementById('modalidade').value,
             nome_projeto: document.getElementById('nome_projeto').value,
             discord_lider: document.getElementById('discord_lider').value,
@@ -212,21 +225,26 @@ if (localStorage.getItem('nrg_jam_inscrito')) {
 
         try {
             const req = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dados) });
+            const res = await req.json();
+            
             if (req.ok) {
                 localStorage.setItem('nrg_jam_inscrito', 'true');
                 statusInscricao.style.color = "#00ff88";
                 statusInscricao.textContent = "INSCRITO COM SUCESSO!";
                 setTimeout(() => location.reload(), 2000);
-            } else throw new Error("Falha no servidor.");
+            } else {
+                throw new Error(res.error || "Instabilidade no servidor da NRG. Tente novamente em instantes.");
+            }
         } catch (err) {
             statusInscricao.style.color = "#ff3366";
-            statusInscricao.textContent = "ERRO. TENTE NOVAMENTE.";
+            statusInscricao.textContent = err.message;
             btnInscricao.disabled = false;
+            btnInscricao.style.cursor = "pointer";
         }
     });
 }
 
-// --- ENVIO DO JOGO FINALIZADO ---
+// --- ENTREGA (COM VALIDAÇÃO DE URL) ---
 const formEntrega = document.getElementById('jam-entrega');
 const btnEntrega = document.getElementById('btn-entrega');
 const statusEntrega = document.getElementById('status-entrega');
@@ -238,30 +256,45 @@ if (localStorage.getItem('nrg_jam_entregue')) {
 } else {
     formEntrega.addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        const linkInput = document.getElementById('entrega_link').value;
+        if (!linkInput.startsWith('http://') && !linkInput.startsWith('https://')) {
+            statusEntrega.style.display = "block";
+            statusEntrega.style.color = "#ff3366";
+            statusEntrega.textContent = "O link deve começar com http:// ou https://";
+            return;
+        }
+
         btnEntrega.disabled = true;
+        btnEntrega.style.cursor = "wait";
         statusEntrega.style.display = "block";
         statusEntrega.style.color = "#8a2be2";
-        statusEntrega.textContent = "ENVIANDO PROJETO...";
+        statusEntrega.textContent = "ENVIANDO PROJETO PARA A DIRETORIA...";
 
         const dados = {
-            tipo: 'entrega', // IDENTIFICADOR PARA O SERVIDOR
+            tipo: 'entrega',
             nome_projeto: document.getElementById('entrega_nome').value,
             discord_lider: document.getElementById('entrega_discord').value,
-            link_jogo: document.getElementById('entrega_link').value
+            link_jogo: linkInput
         };
 
         try {
             const req = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dados) });
+            const res = await req.json();
+
             if (req.ok) {
                 localStorage.setItem('nrg_jam_entregue', 'true');
                 statusEntrega.style.color = "#00ff88";
                 statusEntrega.textContent = "PROJETO ENVIADO COM SUCESSO!";
                 setTimeout(() => location.reload(), 2000);
-            } else throw new Error("Falha no servidor.");
+            } else {
+                throw new Error(res.error || "A API do Discord está instável. Aguarde um minuto e tente novamente.");
+            }
         } catch (err) {
             statusEntrega.style.color = "#ff3366";
-            statusEntrega.textContent = "ERRO. TENTE NOVAMENTE.";
+            statusEntrega.textContent = err.message;
             btnEntrega.disabled = false;
+            btnEntrega.style.cursor = "pointer";
         }
     });
 }
