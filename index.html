@@ -3,74 +3,191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NRG GAME JAM - Inscrições</title>
+<title>NRG Studios - Game Jam Oficial</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap');
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
-body { background-color: #050508; background-image: radial-gradient(circle at 50% 0%, #4a00e0 0%, #050508 60%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: center; overflow-x: hidden; padding: 20px; }
-.container { background: rgba(15, 15, 20, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 16px; padding: 40px; width: 100%; max-width: 650px; box-shadow: 0 0 50px rgba(0, 255, 136, 0.1); }
-.header { text-align: center; margin-bottom: 25px; }
-.header h1 { font-size: 36px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; background: linear-gradient(90deg, #00ff88, #00b8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.header p { color: #a0a0b0; font-size: 15px; margin-top: 10px; }
-.info-box { background: rgba(0, 255, 136, 0.1); border-left: 4px solid #00ff88; padding: 15px; border-radius: 4px; margin-bottom: 25px; font-size: 14px; color: #d0d0e0; }
-.info-box strong { color: #fff; }
+:root {
+    --bg-color: #050508;
+    --primary: #00ff88;
+    --secondary: #00b8ff;
+    --accent: #8a2be2;
+    --text-main: #ffffff;
+    --text-muted: #a0a0b0;
+    --glass-bg: rgba(15, 15, 20, 0.6);
+    --glass-border: rgba(0, 255, 136, 0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; scroll-behavior: smooth; }
+
+body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+
+/* Background Animado (Sem lag) */
+.bg-glow { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(138,43,226,0.15) 0%, rgba(5,5,8,0) 70%); top: -200px; left: -200px; border-radius: 50%; z-index: -1; }
+.bg-glow-2 { position: fixed; width: 800px; height: 800px; background: radial-gradient(circle, rgba(0,255,136,0.1) 0%, rgba(5,5,8,0) 70%); bottom: -300px; right: -200px; border-radius: 50%; z-index: -1; }
+
+/* Navbar */
+nav { position: fixed; top: 0; width: 100%; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(5, 5, 8, 0.8); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.logo { font-size: 24px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.nav-links a { color: var(--text-main); text-decoration: none; margin-left: 30px; font-size: 14px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+.nav-links a:hover { color: var(--primary); }
+
+/* Hero Section */
+header { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
+.hero-tag { display: inline-block; padding: 8px 16px; background: rgba(0,255,136,0.1); border: 1px solid var(--primary); border-radius: 50px; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; }
+header h1 { font-size: 64px; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 20px; }
+header h1 span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+header p { font-size: 18px; color: var(--text-muted); max-width: 600px; margin-bottom: 40px; }
+.btn-primary { padding: 15px 40px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #000; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: 0.3s; box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3); }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 255, 136, 0.5); }
+
+/* Contagem Regressiva */
+.countdown { display: flex; gap: 20px; margin-bottom: 40px; }
+.time-box { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); padding: 20px; border-radius: 12px; min-width: 100px; }
+.time-box span { display: block; font-size: 32px; font-weight: 900; color: var(--primary); }
+.time-box label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Seção de Detalhes (Grid) */
+section { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
+.section-title { text-align: center; font-size: 36px; font-weight: 900; text-transform: uppercase; margin-bottom: 50px; }
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.card { background: var(--glass-bg); border: 1px solid rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; transition: 0.3s; }
+.card:hover { border-color: var(--accent); transform: translateY(-5px); }
+.card h3 { font-size: 20px; margin-bottom: 15px; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+.card p, .card ul { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+.card ul { list-style-position: inside; margin-top: 10px; }
+
+/* Formulário de Inscrição Integrado */
+.form-container { background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 40px; max-width: 700px; margin: 0 auto; box-shadow: 0 0 50px rgba(0, 255, 136, 0.05); }
 .form-group { margin-bottom: 20px; }
-.form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #c0c0d0; margin-bottom: 8px; letter-spacing: 1px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid #333; border-radius: 8px; padding: 12px 15px; color: #fff; font-size: 14px; outline: none; transition: all 0.3s ease; }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
-.equipe-field { display: none; } 
-.submit-btn { width: 100%; background: linear-gradient(90deg, #00b8ff, #00ff88); color: #050508; border: none; border-radius: 8px; padding: 15px; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; }
-.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 255, 136, 0.4); }
+.form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 1px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid #333; border-radius: 8px; padding: 15px; color: #fff; font-size: 14px; outline: none; transition: 0.3s; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); }
+.equipe-field { display: none; }
+.submit-btn { width: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #000; border: none; border-radius: 8px; padding: 15px; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3); }
 .submit-btn:disabled { background: #333; cursor: not-allowed; transform: none; box-shadow: none; color: #888; }
 #status-msg { text-align: center; margin-top: 15px; font-size: 12px; font-weight: bold; display: none; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    header h1 { font-size: 42px; }
+    .countdown { flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .nav-links { display: none; } /* Oculta links no mobile para simplificar */
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>NRG Game Jam</h1>
-        <p>A batalha de desenvolvimento começou. Prove o seu valor.</p>
+<div class="bg-glow"></div>
+<div class="bg-glow-2"></div>
+
+<nav>
+    <div class="logo">NRG STUDIOS</div>
+    <div class="nav-links">
+        <a href="#sobre">Sobre o Evento</a>
+        <a href="#regras">Regras</a>
+        <a href="#inscricao">Inscrição</a>
+    </div>
+</nav>
+
+<header>
+    <div class="hero-tag">Evento Oficial de Desenvolvimento</div>
+    <h1>A Maior <span>Game Jam</span><br>da NRG Studios</h1>
+    <p>O desafio foi lançado. Você tem até o dia 17 de Julho para provar o seu valor, criar sistemas épicos e garantir a sua vaga na nossa equipe padrão AAA.</p>
+    
+    <div class="countdown" id="timer">
+        <div class="time-box"><span id="dias">00</span><label>Dias</label></div>
+        <div class="time-box"><span id="horas">00</span><label>Horas</label></div>
+        <div class="time-box"><span id="minutos">00</span><label>Minutos</label></div>
+        <div class="time-box"><span id="segundos">00</span><label>Segundos</label></div>
     </div>
 
-    <div class="info-box">
-        <strong>🎨 TEMA:</strong> Livre<br>
-        <strong>🤖 IA:</strong> Uso Totalmente Liberado<br>
-        <strong>⏳ PRAZO:</strong> 10 de Julho até 17 de Julho (23:59 BRT)
+    <a href="#inscricao" class="btn-primary">Inscreva-se Agora</a>
+</header>
+
+<section id="sobre">
+    <h2 class="section-title">Informações Classificadas</h2>
+    <div class="info-grid">
+        <div class="card">
+            <h3>🎯 Tema Livre</h3>
+            <p>O tema desta edição é totalmente <strong>LIVRE</strong>. Mostre a sua verdadeira essência. Queremos ver criatividade, otimização e sistemas modulares de alto nível.</p>
+        </div>
+        <div class="card">
+            <h3>🤖 IA Liberada</h3>
+            <p>A tecnologia avança e nós também. O uso de Inteligências Artificiais (como ChatGPT, GitHub Copilot) é 100% permitido para auxiliar nos scripts e ideias.</p>
+        </div>
+        <div class="card">
+            <h3>🏆 A Premiação</h3>
+            <p>Os vencedores ganharão visibilidade no nosso Discord oficial, mas o prêmio final é muito maior: <strong>Os melhores talentos serão recrutados oficialmente para a equipe do Legend Fruits.</strong></p>
+        </div>
     </div>
+</section>
 
-    <form id="jam-form">
-        <div class="form-group">
-            <label>Modalidade de Participação</label>
-            <select id="modalidade" required onchange="verificarModalidade()">
-                <option value="" disabled selected>Escolha como vai participar...</option>
-                <option value="Solo">Lobo Solitário (Solo)</option>
-                <option value="Equipe">Esquadrão (Equipe)</option>
-            </select>
-        </div>
+<section id="inscricao">
+    <h2 class="section-title">Portal de Inscrição</h2>
+    <div class="form-container" id="form-wrapper">
+        <form id="jam-form">
+            <div class="form-group">
+                <label>Modalidade de Participação</label>
+                <select id="modalidade" required onchange="verificarModalidade()">
+                    <option value="" disabled selected>Escolha o seu caminho...</option>
+                    <option value="Solo">Lobo Solitário (Solo)</option>
+                    <option value="Equipe">Esquadrão (Equipe de até 4 pessoas)</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label>Nome do Participante ou Nome da Equipe</label>
-            <input type="text" id="nome_projeto" required maxlength="50" autocomplete="off">
-        </div>
+            <div class="form-group">
+                <label>Nome do Projeto ou da Equipe</label>
+                <input type="text" id="nome_projeto" required maxlength="50" autocomplete="off" placeholder="Ex: Void Scripters">
+            </div>
 
-        <div class="form-group">
-            <label>Seu Usuário do Discord (Líder)</label>
-            <input type="text" id="discord_lider" placeholder="Ex: dev_lendario#1234" required maxlength="50" autocomplete="off">
-        </div>
+            <div class="form-group">
+                <label>Seu Usuário do Discord (Líder)</label>
+                <input type="text" id="discord_lider" placeholder="Ex: dev_lendario#1234" required maxlength="50" autocomplete="off">
+            </div>
 
-        <div class="form-group equipe-field" id="campo_equipe">
-            <label>Membros da Equipe (Nicknames / Discord)</label>
-            <textarea id="membros_equipe" placeholder="Liste os outros membros da sua equipe..." rows="3"></textarea>
-        </div>
+            <div class="form-group equipe-field" id="campo_equipe">
+                <label>Membros da Equipe (Nicknames do Discord)</label>
+                <textarea id="membros_equipe" placeholder="Separe os nicks por vírgula..." rows="3"></textarea>
+            </div>
 
-        <button type="submit" class="submit-btn" id="btn-submit">Confirmar Inscrição</button>
-        <div id="status-msg">Processando...</div>
-    </form>
-</div>
+            <button type="submit" class="submit-btn" id="btn-submit">Submeter Inscrição ao Servidor</button>
+            <div id="status-msg">Processando dados...</div>
+        </form>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer style="text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px;">
+    <p style="color: var(--text-muted); font-size: 14px;">© 2026 NRG Studios. Todos os direitos reservados. Motor de IA Ativado.</p>
+</footer>
 
 <script>
+/* -----------------------------------------
+   1. SISTEMA DE CONTAGEM REGRESSIVA (Sem lag)
+----------------------------------------- */
+const dataFinal = new Date("2026-07-17T23:59:59-03:00").getTime();
+
+const timerInterval = setInterval(function() {
+    const agora = new Date().getTime();
+    const distancia = dataFinal - agora;
+
+    if (distancia < 0) {
+        clearInterval(timerInterval);
+        document.getElementById("timer").innerHTML = "<h2 style='color: #ff3366; text-transform: uppercase; letter-spacing: 2px;'>A Batalha Terminou</h2>";
+        return;
+    }
+
+    document.getElementById("dias").innerText = Math.floor(distancia / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+    document.getElementById("horas").innerText = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+    document.getElementById("minutos").innerText = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+    document.getElementById("segundos").innerText = Math.floor((distancia % (1000 * 60)) / 1000).toString().padStart(2, '0');
+}, 1000);
+
+/* -----------------------------------------
+   2. LÓGICA DE INTERFACE
+----------------------------------------- */
 function verificarModalidade() {
     const modalidade = document.getElementById('modalidade').value;
     const campoEquipe = document.getElementById('campo_equipe');
@@ -82,18 +199,21 @@ function verificarModalidade() {
     }
 }
 
-const DATA_LIMITE_JAM = new Date("2026-07-17T23:59:59-03:00").getTime();
+/* -----------------------------------------
+   3. SISTEMA DE SEGURANÇA E ENVIO
+----------------------------------------- */
 const form = document.getElementById('jam-form');
 const btn = document.getElementById('btn-submit');
 const status = document.getElementById('status-msg');
+const formWrapper = document.getElementById('form-wrapper');
 
 function verificarTrava() {
-    if (new Date().getTime() > DATA_LIMITE_JAM) {
-        form.innerHTML = `<div style="text-align:center;"><h2 style="color:#ff3366;">INSCRIÇÕES ENCERRADAS</h2><p style="color:#c0c0d0;">O prazo da NRG Game Jam chegou ao fim.</p></div>`;
+    if (new Date().getTime() > dataFinal) {
+        formWrapper.innerHTML = `<div style="text-align:center;"><h2 style="color:#ff3366; margin-bottom:10px;">PORTÕES FECHADOS</h2><p style="color:#c0c0d0;">O prazo de inscrição e envio da NRG Game Jam foi encerrado pelo servidor.</p></div>`;
         return true;
     }
     if (localStorage.getItem('nrg_jam_inscrito')) {
-        form.innerHTML = `<div style="text-align:center;"><h2 style="color:#00ff88;">INSCRIÇÃO CONFIRMADA</h2><p style="color:#c0c0d0;">Sua vaga já está garantida no sistema. Boa sorte no desenvolvimento!</p></div>`;
+        formWrapper.innerHTML = `<div style="text-align:center;"><h2 style="color:#00ff88; margin-bottom:10px;">ACESSO CONCEDIDO</h2><p style="color:#c0c0d0;">A sua vaga já está garantida no nosso banco de dados. Foco no desenvolvimento!</p></div>`;
         return true;
     }
     return false;
@@ -107,15 +227,16 @@ if (!verificarTrava()) {
             modalidade: document.getElementById('modalidade').value,
             nome_projeto: document.getElementById('nome_projeto').value,
             discord_lider: document.getElementById('discord_lider').value,
-            membros_equipe: document.getElementById('membros_equipe').value || "Nenhum (Solo)"
+            membros_equipe: document.getElementById('membros_equipe').value || "Nenhum (Lobo Solitário)"
         };
 
         btn.disabled = true;
         status.style.display = "block";
         status.style.color = "#00b8ff";
-        status.textContent = "REGISTRANDO NO SISTEMA DA NRG...";
+        status.textContent = "ESTABELECENDO CONEXÃO SEGURA COM A NRG...";
 
         try {
+            // Conecta com o SEU servidor seguro (submit.js) que já criamos
             const response = await fetch('/api/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -125,15 +246,15 @@ if (!verificarTrava()) {
             if (response.ok) {
                 localStorage.setItem('nrg_jam_inscrito', 'true');
                 status.style.color = "#00ff88";
-                status.textContent = "INSCRIÇÃO REALIZADA COM SUCESSO!";
-                btn.textContent = "BEM-VINDO À JAM";
+                status.textContent = "DADOS CRIPTOGRAFADOS E SALVOS COM SUCESSO!";
+                btn.textContent = "INSCRITO OFICIALMENTE";
                 setTimeout(() => { verificarTrava(); }, 2000);
             } else {
-                throw new Error("Erro no servidor da Jam");
+                throw new Error("Conexão rejeitada pelo servidor.");
             }
         } catch (error) {
             status.style.color = "#ff3366";
-            status.textContent = "ERRO NA CONEXÃO. TENTE NOVAMENTE.";
+            status.textContent = "FALHA DE COMUNICAÇÃO. TENTE NOVAMENTE.";
             btn.disabled = false;
         }
     });
