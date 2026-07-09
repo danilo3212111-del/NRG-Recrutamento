@@ -3,102 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NRG Studios - Recrutamento de Elite</title>
+<title>NRG GAME JAM - Inscrições</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
-body { background-color: #050508; background-image: radial-gradient(circle at 50% 0%, #2a0845 0%, #050508 60%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: center; overflow-x: hidden; }
-.container { background: rgba(15, 15, 20, 0.6); backdrop-filter: blur(15px); border: 1px solid rgba(138, 43, 226, 0.3); border-radius: 16px; padding: 40px; width: 100%; max-width: 600px; box-shadow: 0 0 40px rgba(138, 43, 226, 0.1); }
-.header { text-align: center; margin-bottom: 30px; }
-.header h1 { font-size: 32px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; background: linear-gradient(90deg, #8a2be2, #d8b4fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.header p { color: #a0a0b0; font-size: 14px; margin-top: 10px; }
+body { background-color: #050508; background-image: radial-gradient(circle at 50% 0%, #4a00e0 0%, #050508 60%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: center; overflow-x: hidden; padding: 20px; }
+.container { background: rgba(15, 15, 20, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 16px; padding: 40px; width: 100%; max-width: 650px; box-shadow: 0 0 50px rgba(0, 255, 136, 0.1); }
+.header { text-align: center; margin-bottom: 25px; }
+.header h1 { font-size: 36px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; background: linear-gradient(90deg, #00ff88, #00b8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.header p { color: #a0a0b0; font-size: 15px; margin-top: 10px; }
+.info-box { background: rgba(0, 255, 136, 0.1); border-left: 4px solid #00ff88; padding: 15px; border-radius: 4px; margin-bottom: 25px; font-size: 14px; color: #d0d0e0; }
+.info-box strong { color: #fff; }
 .form-group { margin-bottom: 20px; }
 .form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #c0c0d0; margin-bottom: 8px; letter-spacing: 1px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid #333; border-radius: 8px; padding: 12px 15px; color: #fff; font-size: 14px; outline: none; transition: all 0.3s ease; }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #8a2be2; box-shadow: 0 0 15px rgba(138, 43, 226, 0.3); }
-.form-group textarea { resize: vertical; min-height: 100px; }
-.submit-btn { width: 100%; background: linear-gradient(90deg, #6a0dad, #8a2be2); color: #fff; border: none; border-radius: 8px; padding: 15px; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; }
-.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(138, 43, 226, 0.4); }
+.form-group input, .form-group select, .form-group textarea { width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid #333; border-radius: 8px; padding: 12px 15px; color: #fff; font-size: 14px; outline: none; transition: all 0.3s ease; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
+.equipe-field { display: none; } 
+.submit-btn { width: 100%; background: linear-gradient(90deg, #00b8ff, #00ff88); color: #050508; border: none; border-radius: 8px; padding: 15px; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; }
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 255, 136, 0.4); }
 .submit-btn:disabled { background: #333; cursor: not-allowed; transform: none; box-shadow: none; color: #888; }
-#ai-status { text-align: center; margin-top: 15px; font-size: 12px; font-weight: bold; color: #ff3366; display: none; text-transform: uppercase; letter-spacing: 1px; }
+#status-msg { text-align: center; margin-top: 15px; font-size: 12px; font-weight: bold; display: none; text-transform: uppercase; letter-spacing: 1px; }
 </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>NRG Studios</h1>
-        <p>Apenas os mais aptos sobrevivem. O Sistema de IA avaliará suas respostas.</p>
+        <h1>NRG Game Jam</h1>
+        <p>A batalha de desenvolvimento começou. Prove o seu valor.</p>
     </div>
 
-    <form id="nrg-form">
-        <div class="form-group"><label>Nome / Nickname</label><input type="text" id="nome" required maxlength="50"></div>
-        <div class="form-group"><label>Usuário do Discord</label><input type="text" id="discord" required maxlength="50"></div>
+    <div class="info-box">
+        <strong>🎨 TEMA:</strong> Livre<br>
+        <strong>🤖 IA:</strong> Uso Totalmente Liberado<br>
+        <strong>⏳ PRAZO:</strong> 10 de Julho até 17 de Julho (23:59 BRT)
+    </div>
+
+    <form id="jam-form">
         <div class="form-group">
-            <label>Especialidade Principal</label>
-            <select id="cargo" required>
-                <option value="" disabled selected>Selecione sua área...</option>
-                <option value="Scripter">Scripter (Lua / OOP / Knit)</option>
-                <option value="Builder">Builder / Modelador 3D</option>
-                <option value="Animator">Animador</option>
-                <option value="VFX">VFX Artist</option>
+            <label>Modalidade de Participação</label>
+            <select id="modalidade" required onchange="verificarModalidade()">
+                <option value="" disabled selected>Escolha como vai participar...</option>
+                <option value="Solo">Lobo Solitário (Solo)</option>
+                <option value="Equipe">Esquadrão (Equipe)</option>
             </select>
         </div>
-        <div class="form-group"><label>Link do Portfólio (Opcional)</label><input type="url" id="portfolio" maxlength="150"></div>
-        <div class="form-group"><label>Por que a NRG Studios?</label><textarea id="motivo" required maxlength="1500"></textarea></div>
 
-        <button type="submit" class="submit-btn" id="btn-submit">Submeter ao Sistema</button>
-        <div id="ai-status">Processando...</div>
+        <div class="form-group">
+            <label>Nome do Participante ou Nome da Equipe</label>
+            <input type="text" id="nome_projeto" required maxlength="50" autocomplete="off">
+        </div>
+
+        <div class="form-group">
+            <label>Seu Usuário do Discord (Líder)</label>
+            <input type="text" id="discord_lider" placeholder="Ex: dev_lendario#1234" required maxlength="50" autocomplete="off">
+        </div>
+
+        <div class="form-group equipe-field" id="campo_equipe">
+            <label>Membros da Equipe (Nicknames / Discord)</label>
+            <textarea id="membros_equipe" placeholder="Liste os outros membros da sua equipe..." rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="btn-submit">Confirmar Inscrição</button>
+        <div id="status-msg">Processando...</div>
     </form>
 </div>
 
 <script>
-const DATA_LIMITE = new Date("2026-07-07T20:00:00-03:00").getTime();
+function verificarModalidade() {
+    const modalidade = document.getElementById('modalidade').value;
+    const campoEquipe = document.getElementById('campo_equipe');
+    if (modalidade === "Equipe") {
+        campoEquipe.style.display = "block";
+    } else {
+        campoEquipe.style.display = "none";
+        document.getElementById('membros_equipe').value = "";
+    }
+}
 
-const form = document.getElementById('nrg-form');
+const DATA_LIMITE_JAM = new Date("2026-07-17T23:59:59-03:00").getTime();
+const form = document.getElementById('jam-form');
 const btn = document.getElementById('btn-submit');
-const status = document.getElementById('ai-status');
+const status = document.getElementById('status-msg');
 
-function verificarBloqueios() {
-    const agora = new Date().getTime();
-
-    if (agora > DATA_LIMITE) {
-        form.innerHTML = `
-            <div style="text-align:center; padding: 20px;">
-                <h2 style="color: #ff3366; font-size: 24px; margin-bottom: 10px;">SISTEMA ENCERRADO</h2>
-                <p style="color: #c0c0d0; font-size: 14px;">O prazo oficial de recrutamento da NRG Studios terminou.</p>
-            </div>`;
+function verificarTrava() {
+    if (new Date().getTime() > DATA_LIMITE_JAM) {
+        form.innerHTML = `<div style="text-align:center;"><h2 style="color:#ff3366;">INSCRIÇÕES ENCERRADAS</h2><p style="color:#c0c0d0;">O prazo da NRG Game Jam chegou ao fim.</p></div>`;
         return true;
     }
-
-    if (localStorage.getItem('nrg_candidatura_enviada')) {
-        form.innerHTML = `
-            <div style="text-align:center; padding: 20px;">
-                <h2 style="color: #00ff88; font-size: 24px; margin-bottom: 10px;">CANDIDATURA REGISTRADA</h2>
-                <p style="color: #c0c0d0; font-size: 14px;">Nossa Inteligência Artificial já processou a sua ficha e enviou para a diretoria. Aguarde o nosso contato.</p>
-            </div>`;
+    if (localStorage.getItem('nrg_jam_inscrito')) {
+        form.innerHTML = `<div style="text-align:center;"><h2 style="color:#00ff88;">INSCRIÇÃO CONFIRMADA</h2><p style="color:#c0c0d0;">Sua vaga já está garantida no sistema. Boa sorte no desenvolvimento!</p></div>`;
         return true;
     }
     return false;
 }
 
-if (!verificarBloqueios()) {
+if (!verificarTrava()) {
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const dados = {
-            nome: document.getElementById('nome').value,
-            discord: document.getElementById('discord').value,
-            cargo: document.getElementById('cargo').value,
-            portfolio: document.getElementById('portfolio').value,
-            motivo: document.getElementById('motivo').value
+            modalidade: document.getElementById('modalidade').value,
+            nome_projeto: document.getElementById('nome_projeto').value,
+            discord_lider: document.getElementById('discord_lider').value,
+            membros_equipe: document.getElementById('membros_equipe').value || "Nenhum (Solo)"
         };
 
         btn.disabled = true;
         status.style.display = "block";
-        status.style.color = "#d8b4fe";
-        status.textContent = "CONECTANDO AO SERVIDOR SEGURO DA NRG...";
+        status.style.color = "#00b8ff";
+        status.textContent = "REGISTRANDO NO SISTEMA DA NRG...";
 
         try {
             const response = await fetch('/api/submit', {
@@ -107,22 +122,19 @@ if (!verificarBloqueios()) {
                 body: JSON.stringify(dados)
             });
 
-            const resultado = await response.json();
-
             if (response.ok) {
-                localStorage.setItem('nrg_candidatura_enviada', 'true');
+                localStorage.setItem('nrg_jam_inscrito', 'true');
                 status.style.color = "#00ff88";
-                status.textContent = "ENVIADO COM SUCESSO! STATUS: " + resultado.statusIA;
-                btn.textContent = "CANDIDATURA CONCLUÍDA";
-                setTimeout(() => { verificarBloqueios(); }, 2500);
+                status.textContent = "INSCRIÇÃO REALIZADA COM SUCESSO!";
+                btn.textContent = "BEM-VINDO À JAM";
+                setTimeout(() => { verificarTrava(); }, 2000);
             } else {
-                throw new Error(resultado.error || "Erro desconhecido");
+                throw new Error("Erro no servidor da Jam");
             }
         } catch (error) {
             status.style.color = "#ff3366";
-            status.textContent = "ERRO: " + error.message;
+            status.textContent = "ERRO NA CONEXÃO. TENTE NOVAMENTE.";
             btn.disabled = false;
-            btn.textContent = "TENTAR NOVAMENTE";
         }
     });
 }
