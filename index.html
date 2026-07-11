@@ -302,32 +302,39 @@ const chatSend = document.getElementById('chat-send');
 chatBtn.addEventListener('click', () => { chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex'; });
 closeChat.addEventListener('click', () => chatWindow.style.display = 'none');
 
+// 🛡️ CORREÇÃO DE SEGURANÇA CONTRA QUEBRA DE LAYOUT (XSS)
 function addMessage(text, sender) {
     const div = document.createElement('div');
     div.className = sender === 'ai' ? 'msg-ai' : 'msg-user';
-    div.innerHTML = text;
+    if (sender === 'user') {
+        div.textContent = text; // Blindagem: agora se digitarem código, o texto vira puro e não quebra a tela
+    } else {
+        div.innerHTML = text; // Apenas o bot pode usar formatação HTML interna
+    }
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+// 🧠 CÉREBRO OTIMIZADO: LIDA COM ACENTOS, SINÔNIMOS E LETRAS MAIÚSCULAS/MINÚSCULAS
 function processAIResponse(msg) {
-    const text = msg.toLowerCase();
-    let resposta = "Desculpe, meu banco de dados não encontrou essa informação. Verifique as regras acima ou entre no nosso servidor do Discord.";
+    // A linha abaixo remove todos os acentos e deixa tudo minúsculo para a IA não bugar com palavras como "Prêmio"
+    const text = msg.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let resposta = "Desculpe, meu banco de dados não encontrou essa informação. Verifique as regras no topo do site ou pergunte no nosso servidor do Discord.";
     
-    if (text.includes("prazo") || text.includes("data") || text.includes("dia")) {
+    if (text.includes("prazo") || text.includes("data") || text.includes("dia") || text.includes("quando") || text.includes("horario")) {
         resposta = "O prazo oficial vai de <strong>10 de Julho até o dia 17 de Julho às 23:59 (BRT)</strong>.";
-    } else if (text.includes("completo") || text.includes("pronto") || text.includes("jogavel")) {
+    } else if (text.includes("completo") || text.includes("pronto") || text.includes("jogavel") || text.includes("estado")) {
         resposta = "O jogo não precisa estar 100% finalizado, mas deve estar jogável. Foque em entregar um loop divertido e sem bugs críticos em vez de algo enorme.";
-    } else if (text.includes("equipe") || text.includes("time") || text.includes("solo")) {
+    } else if (text.includes("equipe") || text.includes("time") || text.includes("solo") || text.includes("grupo") || text.includes("junto")) {
         resposta = "Você pode competir Solo ou montar uma Equipe de até 4 membros. Apenas o líder precisa realizar a inscrição no site.";
-    } else if (text.includes("premio") || text.includes("ganha") || text.includes("vencer")) {
+    } else if (text.includes("premio") || text.includes("ganha") || text.includes("vencer") || text.includes("recompensa") || text.includes("ganhador")) {
         resposta = "O prêmio principal é o <strong>Recrutamento Oficial</strong> para a equipe padrão AAA do Legend Fruits!";
-    } else if (text.includes("ia ") || text.includes("chatgpt") || text.includes("copilot")) {
+    } else if (text.match(/\bia\b/) || text.includes("chatgpt") || text.includes("copilot") || text.includes("toolbox") || text.includes("inteligencia")) {
         resposta = "O uso de IA para programação é 100% liberado! Mas recursos de Toolbox apenas para cenários.";
-    } else if (text.includes("tema") || text.includes("sobre")) {
+    } else if (text.includes("tema") || text.includes("sobre") || text.includes("estilo") || text.includes("assunto")) {
         resposta = "O tema desta edição é totalmente <strong>LIVRE</strong>. Mostre a sua verdadeira criatividade e maestria na engine.";
-    } else if (text.includes("seguro") || text.includes("navegador") || text.includes("seguranca")) {
-        resposta = "Recomendamos usar navegadores como <strong>Brave</strong> ou Chrome, testar links em verificadores e sempre navegar sob arquitetura Zero Trust (como o JAMstack que usamos).";
+    } else if (text.includes("seguro") || text.includes("navegador") || text.includes("seguranca") || text.includes("virus")) {
+        resposta = "Recomendamos usar navegadores como <strong>Brave</strong> ou Chrome, testar links em verificadores e manter o seu PC blindado.";
     }
 
     setTimeout(() => { addMessage(`<strong>NRG System:</strong><br>${resposta}`, 'ai'); }, 500);
@@ -351,14 +358,16 @@ function verificarModalidade() {
 
 function isEncerrado() { return new Date().getTime() > dataFinal; }
 
-// --- INSCRIÇÃO COM PRESERVAÇÃO DE DADOS (RECIBO) ---
+// --- INSCRIÇÃO COM PRESERVAÇÃO DE DADOS E CORREÇÃO DE CACHE ---
 const formInscricao = document.getElementById('jam-inscricao');
 const btnInscricao = document.getElementById('btn-inscricao');
 const statusInscricao = document.getElementById('status-inscricao');
 
-// Recupera dados salvos para evitar que o usuário perca ao recarregar a página
-const nomeSalvo = localStorage.getItem('nrg_jam_nome') || "";
-const discordSalvo = localStorage.getItem('nrg_jam_discord') || "";
+// Recupera dados salvos e previne o bug do campo vazio "Ghost Cache"
+const nomeSalvo = localStorage.getItem('nrg_jam_nome');
+const discordSalvo = localStorage.getItem('nrg_jam_discord');
+const displayNome = nomeSalvo || "[ Inscrito na Versão 1.0 ]";
+const displayDiscord = discordSalvo || "[ Protegido pelo Sistema ]";
 
 if (localStorage.getItem('nrg_jam_inscrito')) {
     document.getElementById('form-inscricao-wrapper').innerHTML = `
@@ -366,12 +375,12 @@ if (localStorage.getItem('nrg_jam_inscrito')) {
             <h2 style="color:#00ff88; margin-bottom:10px;">INSCRIÇÃO CONFIRMADA</h2>
             <p style="color:#c0c0d0; margin-bottom: 20px;">Sua vaga está garantida na NRG Game Jam. Os seus dados foram salvos com sucesso e repassados para a aba de entrega.</p>
             <div style="background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary); padding: 20px; border-radius: 8px; display: inline-block; text-align: left; min-width: 280px;">
-                <p style="font-size: 13px; color: #fff;"><strong>👑 Projeto / Equipe:</strong> <span style="color: var(--secondary);">${nomeSalvo}</span></p>
-                <p style="font-size: 13px; color: #fff; margin-top: 10px;"><strong>💬 Discord do Líder:</strong> <span style="color: var(--secondary);">${discordSalvo}</span></p>
+                <p style="font-size: 13px; color: #fff;"><strong>👑 Projeto / Equipe:</strong> <span style="color: var(--secondary);">${displayNome}</span></p>
+                <p style="font-size: 13px; color: #fff; margin-top: 10px;"><strong>💬 Discord do Líder:</strong> <span style="color: var(--secondary);">${displayDiscord}</span></p>
             </div>
         </div>`;
         
-    // Auto-preenche o formulário de entrega para o usuário não precisar digitar de novo!
+    // Auto-preenche o formulário de entrega
     if(nomeSalvo && document.getElementById('entrega_nome')) {
         document.getElementById('entrega_nome').value = nomeSalvo;
     }
@@ -403,7 +412,7 @@ if (localStorage.getItem('nrg_jam_inscrito')) {
             const res = await req.json();
             
             if (req.ok) {
-                // SALVA OS DADOS NO NAVEGADOR ANTES DE RECARREGAR
+                // SALVA OS DADOS NO NAVEGADOR
                 localStorage.setItem('nrg_jam_inscrito', 'true');
                 localStorage.setItem('nrg_jam_nome', dados.nome_projeto);
                 localStorage.setItem('nrg_jam_discord', dados.discord_lider);
