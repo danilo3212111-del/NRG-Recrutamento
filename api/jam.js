@@ -1,3 +1,4 @@
+// Cache em memória (Nota: em Serverless functions como na Vercel, esse cache é limpo a cada nova instância/deploy)
 const jamIpCache = new Set();
 
 export default async function handler(req, res) {
@@ -5,44 +6,81 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Método não permitido.' });
     }
 
-    // Trava do dia 17/07/2026 às 23:59 BRT
+    // 1. TRAVA DA NOVA DATA: 20/07/2026 às 23:59 BRT
     const agora = new Date();
-    const dataLimite = new Date("2026-07-17T23:59:59-03:00");
+    const dataLimite = new Date("2026-07-20T23:59:59-03:00");
     if (agora > dataLimite) {
-        return res.status(403).json({ error: 'Inscrições encerradas.' });
+        return res.status(403).json({ error: 'O Evento foi encerrado.' });
     }
 
+    // 2. BLOQUEIO DE SPAM (Cuidado para não bloquear o estúdio inteiro caso compartilhem a mesma internet)
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'IP_JAM_DESCONHECIDO';
-    if (jamIpCache.has(clientIp)) {
-        return res.status(429).json({ error: 'Você já se inscreveu na Game Jam.' });
+    const acaoId = `${clientIp}-${req.body.tipo}`; // Separa cache de Inscrição e cache de Entrega
+    
+    if (jamIpCache.has(acaoId)) {
+        return res.status(429).json({ error: 'Você já realizou esta ação.' });
     }
 
-    const { modalidade, nome_projeto, discord_lider, membros_equipe } = req.body;
-
-    if (!modalidade || !nome_projeto || !discord_lider) {
-        return res.status(400).json({ error: 'Dados incompletos.' });
-    }
-
+    const { tipo } = req.body;
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
-    if (!webhookUrl) return res.status(500).json({ error: 'Erro no Webhook' });
+    
+    if (!webhookUrl) return res.status(500).json({ error: 'Erro de conexão com o Servidor Matriz (Webhook).' });
 
-    const payload = {
-        username: "NRG Game Jam Bot",
-        avatar_url: "https://i.imgur.com/8X16ABy.png",
-        embeds: [{
-            title: "🏆 NOVA INSCRIÇÃO - GAME JAM",
-            color: 65450, // Cor Verde Água
-            fields: [
-                { name: "🎮 Modalidade", value: modalidade, inline: true },
-                { name: "👑 Nome / Equipe", value: nome_projeto, inline: true },
-                { name: "💬 Discord do Líder", value: discord_lider, inline: true },
-                { name: "👥 Membros Extras", value: membros_equipe, inline: false },
-            ],
-            footer: { text: "NRG Studios Game Jam Event" },
-            timestamp: new Date().toISOString()
-        }]
-    };
+    let payload = {};
 
+    // 3. ROTA A: INSCRIÇÃO
+    if (tipo === 'inscricao') {
+        const { modalidade, nome_projeto, discord_lider, membros_equipe } = req.body;
+        if (!modalidade || !nome_projeto || !discord_lider) {
+            return res.status(400).json({ error: 'Dados da inscrição incompletos.' });
+        }
+
+        payload = {
+            username: "NRG Game Jam Core",
+            avatar_url: "https://i.imgur.com/8X16ABy.png",
+            embeds: [{
+                title: "🏆 NOVA INSCRIÇÃO - GAME JAM",
+                color: 65450, // Verde Água
+                fields: [
+                    { name: "🎮 Modalidade", value: modalidade, inline: true },
+                    { name: "👑 Nome / Equipe", value: nome_projeto, inline: true },
+                    { name: "💬 Discord do Líder", value: discord_lider, inline: true },
+                    { name: "👥 Membros Extras", value: membros_equipe || "Nenhum", inline: false },
+                ],
+                footer: { text: "NRG Studios Event System" },
+                timestamp: new Date().toISOString()
+            }]
+        };
+    } 
+    // 4. ROTA B: ENTREGA DO JOGO
+    else if (tipo === 'entrega') {
+        const { nome_projeto, discord_lider, link_jogo } = req.body;
+        if (!nome_projeto || !discord_lider || !link_jogo) {
+            return res.status(400).json({ error: 'Dados de entrega incompletos.' });
+        }
+
+        payload = {
+            username: "NRG Game Jam Core",
+            avatar_url: "https://i.imgur.com/8X16ABy.png",
+            embeds: [{
+                title: "🚀 NOVO JOGO ENTREGUE!",
+                description: "Um projeto foi finalizado e enviado para avaliação da Diretoria.",
+                color: 9055202, // Roxo (Accent)
+                fields: [
+                    { name: "👑 Projeto / Equipe", value: nome_projeto, inline: true },
+                    { name: "💬 Discord do Líder", value: discord_lider, inline: true },
+                    { name: "🔗 Link do Jogo", value: `[Clique aqui para acessar](${link_jogo})`, inline: false },
+                ],
+                footer: { text: "NRG Studios Event System" },
+                timestamp: new Date().toISOString()
+            }]
+        };
+    } 
+    else {
+        return res.status(400).json({ error: 'Tipo de requisição inválido.' });
+    }
+
+    // 5. ENVIO FINAL PARA O DISCORD
     try {
         const discordReq = await fetch(webhookUrl, {
             method: 'POST',
@@ -51,12 +89,12 @@ export default async function handler(req, res) {
         });
 
         if (discordReq.ok) {
-            jamIpCache.add(clientIp);
+            jamIpCache.add(acaoId);
             return res.status(200).json({ success: true });
         } else {
-            return res.status(500).json({ error: 'Erro ao notificar Discord' });
+            return res.status(500).json({ error: 'Falha na comunicação com o servidor da NRG.' });
         }
     } catch (error) {
-        return res.status(500).json({ error: 'Erro interno' });
+        return res.status(500).json({ error: 'Erro crítico interno no servidor.' });
     }
 }
