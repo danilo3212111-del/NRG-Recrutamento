@@ -46,7 +46,7 @@
         header h1 span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { font-size: 16px; color: var(--text-muted); max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
 
-        /* 🎬 CONTAINER DE VÍDEO AAA */
+        /* 🎬 CONTAINER DE VÍDEO AAA - COM BACKDROP DE PERFORMANCE */
         .video-wrapper {
             width: 100%;
             max-width: 800px;
@@ -56,7 +56,7 @@
             border: 1px solid var(--glass-border);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
             position: relative;
-            background: #000;
+            background: #111; /* Fallback de cor caso o vídeo demore um pouco */
         }
         .video-wrapper video {
             width: 100%;
@@ -174,7 +174,7 @@
         <p>A Diretoria concedeu mais tempo para polimento. Você tem até o dia <strong>20 de Julho</strong> para provar o seu valor e garantir a sua vaga na nossa equipe AAA.</p>
         
         <div class="video-wrapper">
-            <video autoplay loop muted playsinline controls>
+            <video autoplay loop muted playsinline controls preload="metadata">
                 <source src="trailer.mp4" type="video/mp4">
                 Seu navegador não suporta a reprodução deste vídeo.
             </video>
@@ -196,7 +196,7 @@
             <div class="form-container" id="form-inscricao-wrapper">
                 <form id="jam-inscricao">
                     <div class="form-group">
-                        <label>Modalidade de Participação</label>
+                        <label for="modalidade">Modalidade de Participação</label>
                         <select id="modalidade" required onchange="verificarModalidade()">
                             <option value="" disabled selected>Escolha o seu caminho...</option>
                             <option value="Solo">Lobo Solitário (Solo)</option>
@@ -204,15 +204,15 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Nome do Projeto ou da Equipe</label>
+                        <label for="nome_projeto">Nome do Projeto ou da Equipe</label>
                         <input type="text" id="nome_projeto" required maxlength="50" autocomplete="off" placeholder="Ex: Void Scripters">
                     </div>
                     <div class="form-group">
-                        <label>Seu Usuário do Discord (Líder)</label>
+                        <label for="discord_lider">Seu Usuário do Discord (Líder)</label>
                         <input type="text" id="discord_lider" placeholder="Ex: dev_lendario" required maxlength="50" autocomplete="off">
                     </div>
                     <div class="form-group equipe-field" id="campo_equipe">
-                        <label>Membros da Equipe (Nicknames do Discord)</label>
+                        <label for="membros_equipe">Membros da Equipe (Nicknames do Discord)</label>
                         <textarea id="membros_equipe" placeholder="Separe os nicks por vírgula..." rows="2"></textarea>
                     </div>
                     <button type="submit" class="submit-btn" id="btn-inscricao">Registrar Inscrição</button>
@@ -226,18 +226,20 @@
             <div class="form-container form-container-alt" id="form-entrega-wrapper">
                 <form id="jam-entrega">
                     <p style="text-align: center; color: var(--text-muted); margin-bottom: 25px; font-size: 14px;">Use esta área apenas quando o seu jogo estiver 100% concluído para envio à diretoria.</p>
+                    
                     <div class="form-group">
-                        <label>Nome da Equipe / Projeto</label>
+                        <label for="entrega_nome">Nome da Equipe / Projeto</label>
                         <input type="text" id="entrega_nome" required maxlength="50" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Usuário do Discord (Líder)</label>
+                        <label for="entrega_discord">Usuário do Discord (Líder)</label>
                         <input type="text" id="entrega_discord" required maxlength="50" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Link do Jogo (Roblox) ou Código (GitHub)</label>
+                        <label for="entrega_link">Link do Jogo (Roblox) ou Código (GitHub)</label>
                         <input type="url" id="entrega_link" required placeholder="https://roblox.com/games/..." autocomplete="off">
                     </div>
+                    
                     <button type="submit" class="submit-btn btn-alt" id="btn-entrega">Enviar Jogo Finalizado</button>
                     <div id="status-entrega" class="status-msg">Processando dados...</div>
                 </form>
@@ -304,7 +306,6 @@
     </footer>
 
     <script>
-    // --- ATUALIZAÇÃO DA DATA: 20 DE JULHO ---
     const dataFinal = new Date("2026-07-20T23:59:59-03:00").getTime();
     
     const timerInterval = setInterval(function() {
