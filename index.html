@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal Oficial da Game Jam da NRG Studios.">
     
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; media-src 'self' blob: data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; media-src 'self' https://github.com https://raw.githubusercontent.com blob: data:;">
     
     <title>NRG Studios - Game Jam Oficial</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
@@ -46,40 +46,9 @@
         header h1 span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { font-size: 16px; color: var(--text-muted); max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
 
-        /* 🎬 CONTAINER DO TRAILER */
-        .video-wrapper {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto 40px auto;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            position: relative;
-            background: #111; 
-        }
-        .video-wrapper video {
-            width: 100%;
-            display: block;
-            border-radius: 16px;
-        }
-        .video-credits {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: rgba(5, 5, 8, 0.85);
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 900;
-            color: var(--text-main);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.1);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            pointer-events: none;
-        }
+        .video-wrapper { width: 100%; max-width: 800px; margin: 0 auto 40px auto; border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); position: relative; background: #111; }
+        .video-wrapper video { width: 100%; display: block; border-radius: 16px; }
+        .video-credits { position: absolute; bottom: 15px; right: 15px; background: rgba(5, 5, 8, 0.85); padding: 8px 16px; border-radius: 50px; font-size: 11px; font-weight: 900; color: var(--text-main); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); pointer-events: none; }
         .video-credits span { color: var(--primary); text-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
 
         .btn-primary { padding: 15px 40px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #000; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: 0.3s; box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3); }
@@ -125,7 +94,7 @@
         .ai-float { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #050508; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3); z-index: 1000; cursor: pointer; font-size: 28px; transition: 0.3s; }
         .ai-float:hover { transform: scale(1.1); box-shadow: 0 15px 25px rgba(0, 255, 136, 0.5); }
 
-        .chat-window { position: fixed; bottom: 100px; right: 30px; width: 350px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); z-index: 1001; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: popUp 0.3s ease-out; }
+        .chat-window { position: fixed; bottom: 100px; right: 30px; width: 350px; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); z-index: 1001; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: popUp 0.3s ease-out; }
         @keyframes popUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .chat-header { background: rgba(0, 255, 136, 0.1); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
         .chat-header h3 { font-size: 14px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
@@ -175,7 +144,7 @@
         
         <div class="video-wrapper">
             <video autoplay loop muted playsinline controls preload="metadata">
-                <source src="trailer.mp4?v=2" type="video/mp4">
+                <source src="https://github.com/Polaris-2025/NRG-Studios/raw/refs/heads/main/NRG_Studios.mp4" type="video/mp4">
                 Seu navegador não suporta a reprodução deste vídeo.
             </video>
             <div class="video-credits">Cinemática por: <span>Polares</span></div>
