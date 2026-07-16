@@ -2,28 +2,33 @@ const inscricaoCache = new Set();
 const entregaCache = new Set();
 const rateLimitMap = new Map();
 
+// Função de segurança leve e rápida contra injeção de scripts
 const sanitize = (text) => {
-    if (!text) return "";
+    if (!text || typeof text !== 'string') return "Não informado";
     return text.replace(/</g, "&lt;").replace(/>/g, "&gt;").trim();
 };
 
 export default async function handler(req, res) {
+    // 1. Verificação Estrita de Método
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Método não permitido.' });
     }
 
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'IP_DESCONHECIDO';
     const agora = new Date().getTime();
-    const dataLimite = new Date("2026-07-17T23:59:59-03:00").getTime();
+    
+    // 2. DATA LIMITE ATUALIZADA (20 DE JULHO DE 2026)
+    const dataLimite = new Date("2026-07-20T23:59:59-03:00").getTime();
 
     if (agora > dataLimite) {
         return res.status(403).json({ error: 'O prazo do evento foi encerrado oficialmente.' });
     }
 
+    // 3. Sistema Anti-Spam / Rate Limit (10 Segundos)
     if (rateLimitMap.has(clientIp)) {
         const ultimoAcesso = rateLimitMap.get(clientIp);
         if (agora - ultimoAcesso < 10000) {
-            return res.status(429).json({ error: 'Muitas tentativas. Aguarde 10 segundos.' });
+            return res.status(429).json({ error: 'Muitas tentativas simultâneas. Aguarde 10 segundos.' });
         }
     }
     rateLimitMap.set(clientIp, agora);
@@ -32,69 +37,80 @@ export default async function handler(req, res) {
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
     if (!webhookUrl) {
-        return res.status(500).json({ error: 'Erro de configuração interna.' });
+        return res.status(500).json({ error: 'Erro crítico de configuração interna do servidor.' });
     }
 
     let payload = {};
 
+    // ==========================================
+    // ROTA A: PROCESSAMENTO DE INSCRIÇÕES
+    // ==========================================
     if (dados.tipo === 'inscricao') {
-        if (inscricaoCache.has(clientIp)) return res.status(403).json({ error: 'Você já realizou a sua inscrição.' });
+        if (inscricaoCache.has(clientIp)) return res.status(403).json({ error: 'Ação Bloqueada: Você já realizou a sua inscrição.' });
+        
         if (!dados.modalidade || !dados.nome_projeto || !dados.discord_lider) {
-            return res.status(400).json({ error: 'Preencha todos os campos obrigatórios.' });
+            return res.status(400).json({ error: 'Ação Interrompida: Preencha todos os campos obrigatórios.' });
         }
 
         payload = {
             username: "NRG Game Jam Bot",
-            avatar_url: "https://i.imgur.com/8X16ABy.png",
+            avatar_url: "https://i.imgur.com/8X16ABy.png", // Insira a logo da NRG aqui, se aplicável
             embeds: [{
-                title: "🟢 NOVA INSCRIÇÃO - GAME JAM",
-                color: 65450,
+                title: "🟢 NOVA INSCRIÇÃO RASTREADA",
+                color: 65450, // Verde Escuro NRG
                 fields: [
                     { name: "🎮 Modalidade", value: sanitize(dados.modalidade), inline: true },
-                    { name: "👑 Nome / Equipe", value: sanitize(dados.nome_projeto), inline: true },
-                    { name: "💬 Discord do Líder", value: sanitize(dados.discord_lider), inline: true },
+                    { name: "👑 Projeto/Equipe", value: sanitize(dados.nome_projeto), inline: true },
+                    { name: "💬 Discord (Líder)", value: sanitize(dados.discord_lider), inline: true },
                     { name: "👥 Membros Extras", value: sanitize(dados.membros_equipe), inline: false },
                 ],
-                footer: { text: "NRG Studios | Sistema de Automação de Cargos" },
+                footer: { text: "NRG Studios | A.I. Automation System" },
                 timestamp: new Date().toISOString()
             }]
         };
         inscricaoCache.add(clientIp);
     } 
+    // ==========================================
+    // ROTA B: PROCESSAMENTO DE ENTREGAS
+    // ==========================================
     else if (dados.tipo === 'entrega') {
-        if (entregaCache.has(clientIp)) return res.status(403).json({ error: 'Você já entregou o seu projeto.' });
+        if (entregaCache.has(clientIp)) return res.status(403).json({ error: 'Ação Bloqueada: O seu projeto já foi entregue.' });
+        
         if (!dados.nome_projeto || !dados.discord_lider || !dados.link_jogo) {
-            return res.status(400).json({ error: 'Preencha todos os campos obrigatórios.' });
+            return res.status(400).json({ error: 'Ação Interrompida: Preencha todos os campos da entrega.' });
         }
         
         const safeLink = sanitize(dados.link_jogo);
         if (!safeLink.startsWith('http://') && !safeLink.startsWith('https://')) {
-            return res.status(400).json({ error: 'O link enviado é inválido. Tente novamente.' });
+            return res.status(400).json({ error: 'Protocolo Inválido: O link do jogo deve começar com http:// ou https://' });
         }
 
         payload = {
             username: "NRG Game Jam Bot",
-            avatar_url: "https://i.imgur.com/8X16ABy.png",
+            avatar_url: "https://i.imgur.com/8X16ABy.png", 
             embeds: [{
-                title: "🟣 PROJETO FINAL ENTREGUE!",
-                color: 9055202,
+                title: "🟣 PROJETO FINAL RECEBIDO!",
+                color: 9055202, // Roxo Escuro
                 fields: [
-                    { name: "👑 Equipe / Projeto", value: sanitize(dados.nome_projeto), inline: true },
-                    { name: "💬 Discord do Líder", value: sanitize(dados.discord_lider), inline: true },
-                    { name: "🔗 Link do Jogo", value: safeLink, inline: false },
+                    { name: "👑 Projeto/Equipe", value: sanitize(dados.nome_projeto), inline: true },
+                    { name: "💬 Discord (Líder)", value: sanitize(dados.discord_lider), inline: true },
+                    { name: "🔗 Link Oficial", value: safeLink, inline: false },
                 ],
-                footer: { text: "NRG Studios | Recepção de Projetos" },
+                footer: { text: "NRG Studios | Game Reception Core" },
                 timestamp: new Date().toISOString()
             }]
         };
         entregaCache.add(clientIp);
     } 
     else {
-        return res.status(400).json({ error: 'Requisição inválida.' });
+        return res.status(400).json({ error: 'Requisição inválida ou corrompida.' });
     }
 
+    // ==========================================
+    // EXECUÇÃO DO WEBHOOK & API DO DISCORD
+    // ==========================================
     try {
-        // Envia a notificação padrão via Webhook
+        // Dispara o alerta padrão no canal do Discord
         const discordReq = await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -102,20 +118,19 @@ export default async function handler(req, res) {
         });
 
         if (!discordReq.ok) {
-            throw new Error("Falha ao enviar webhook de log.");
+            throw new Error("Falha na sincronização do Webhook.");
         }
 
-        // ============================================================
-        // SISTEMA DE CARGO AUTOMÁTICO (Executado apenas em inscrições)
-        // ============================================================
+        // SISTEMA DE CARGO AUTOMÁTICO (Aplicável APENAS na Inscrição)
         if (dados.tipo === 'inscricao') {
             const botToken = process.env.DISCORD_BOT_TOKEN;
             const guildId = process.env.DISCORD_GUILD_ID;
             const roleId = process.env.DISCORD_ROLE_ID;
 
             if (botToken && guildId && roleId) {
-                // 1. Pesquisa o membro no servidor pelo nickname fornecido
-                const limpoUser = dados.discord_lider.trim();
+                const limpoUser = sanitize(dados.discord_lider).trim();
+                
+                // Realiza a busca assíncrona do membro
                 const searchRes = await fetch(`https://discord.com/api/v10/guilds/${guildId}/members/search?query=${encodeURIComponent(limpoUser)}`, {
                     headers: { 'Authorization': `Bot ${botToken}` }
                 });
@@ -124,17 +139,13 @@ export default async function handler(req, res) {
                     const members = await searchRes.json();
                     
                     if (members && members.length > 0) {
-                        // Seleciona o primeiro ID retornado pela pesquisa da API
                         const userId = members[0].user.id;
-
-                        // 2. Injeta o cargo no usuário encontrado
-                        await fetch(`https://discord.com/api/v10/guilds/${guildId}/members/${userId}/roles/${roleId}`, {
+                        
+                        // Atribui o cargo sem bloquear o processo de resposta
+                        fetch(`https://discord.com/api/v10/guilds/${guildId}/members/${userId}/roles/${roleId}`, {
                             method: 'PUT',
                             headers: { 'Authorization': `Bot ${botToken}` }
-                        });
-                        console.log(`[AUTOMATION] Cargo atribuído com sucesso para ${limpoUser}`);
-                    } else {
-                        console.warn(`[AUTOMATION] Membro não localizado visualmente no servidor: ${limpoUser}`);
+                        }).catch(err => console.error("Erro secundário na atribuição de cargo:", err));
                     }
                 }
             }
@@ -143,9 +154,9 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true });
 
     } catch (error) {
-        console.error(`[SERVER ERROR]`, error);
+        // Se a requisição falhar, retira o IP do cache para não punir o usuário eternamente
         if (dados.tipo === 'inscricao') inscricaoCache.delete(clientIp);
         if (dados.tipo === 'entrega') entregaCache.delete(clientIp);
-        return res.status(500).json({ error: 'Erro de comunicação de rede interna. Tente novamente.' });
+        return res.status(500).json({ error: 'Instabilidade na rede de servidores. Tente novamente em instantes.' });
     }
 }
