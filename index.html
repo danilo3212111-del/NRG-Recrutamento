@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal Oficial da Game Jam da NRG Studios.">
     
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; media-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; media-src 'self' blob: data:;">
     
     <title>NRG Studios - Game Jam Oficial</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
@@ -35,7 +35,7 @@
         .bg-glow { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(138,43,226,0.15) 0%, rgba(5,5,8,0) 70%); top: -200px; left: -200px; border-radius: 50%; z-index: -1; transform: translateZ(0); contain: strict; }
         .bg-glow-2 { position: fixed; width: 800px; height: 800px; background: radial-gradient(circle, rgba(0,255,136,0.1) 0%, rgba(5,5,8,0) 70%); bottom: -300px; right: -200px; border-radius: 50%; z-index: -1; transform: translateZ(0); contain: strict; }
 
-        nav { position: fixed; top: 0; width: 100%; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(5, 5, 8, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        nav { position: fixed; top: 0; width: 100%; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(5, 5, 8, 0.8); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .logo { font-size: 24px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .nav-links a { color: var(--text-main); text-decoration: none; margin-left: 30px; font-size: 14px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
         .nav-links a:hover { color: var(--primary); }
@@ -46,7 +46,7 @@
         header h1 span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { font-size: 16px; color: var(--text-muted); max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
 
-        /* 🎬 CONTAINER DE VÍDEO AAA - COM BACKDROP DE PERFORMANCE */
+        /* 🎬 CONTAINER DO TRAILER */
         .video-wrapper {
             width: 100%;
             max-width: 800px;
@@ -125,7 +125,7 @@
         .ai-float { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #050508; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3); z-index: 1000; cursor: pointer; font-size: 28px; transition: 0.3s; }
         .ai-float:hover { transform: scale(1.1); box-shadow: 0 15px 25px rgba(0, 255, 136, 0.5); }
 
-        .chat-window { position: fixed; bottom: 100px; right: 30px; width: 350px; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); z-index: 1001; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: popUp 0.3s ease-out; }
+        .chat-window { position: fixed; bottom: 100px; right: 30px; width: 350px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); z-index: 1001; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: popUp 0.3s ease-out; }
         @keyframes popUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .chat-header { background: rgba(0, 255, 136, 0.1); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
         .chat-header h3 { font-size: 14px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
@@ -175,7 +175,7 @@
         
         <div class="video-wrapper">
             <video autoplay loop muted playsinline controls preload="metadata">
-                <source src="trailer.mp4?v=1" type="video/mp4">
+                <source src="trailer.mp4?v=2" type="video/mp4">
                 Seu navegador não suporta a reprodução deste vídeo.
             </video>
             <div class="video-credits">Cinemática por: <span>Polares</span></div>
