@@ -1,4 +1,4 @@
-// Cache em memória (Nota: em Serverless functions como na Vercel, esse cache é limpo a cada nova instância/deploy)
+// Cache em memória
 const jamIpCache = new Set();
 
 export default async function handler(req, res) {
@@ -13,9 +13,9 @@ export default async function handler(req, res) {
         return res.status(403).json({ error: 'O Evento foi encerrado.' });
     }
 
-    // 2. BLOQUEIO DE SPAM (Cuidado para não bloquear o estúdio inteiro caso compartilhem a mesma internet)
+    // 2. BLOQUEIO DE SPAM
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'IP_JAM_DESCONHECIDO';
-    const acaoId = `${clientIp}-${req.body.tipo}`; // Separa cache de Inscrição e cache de Entrega
+    const acaoId = `${clientIp}-${req.body.tipo}`;
     
     if (jamIpCache.has(acaoId)) {
         return res.status(429).json({ error: 'Você já realizou esta ação.' });
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
             avatar_url: "https://i.imgur.com/8X16ABy.png",
             embeds: [{
                 title: "🏆 NOVA INSCRIÇÃO - GAME JAM",
-                color: 65450, // Verde Água
+                color: 65450,
                 fields: [
                     { name: "🎮 Modalidade", value: modalidade, inline: true },
                     { name: "👑 Nome / Equipe", value: nome_projeto, inline: true },
@@ -65,7 +65,7 @@ export default async function handler(req, res) {
             embeds: [{
                 title: "🚀 NOVO JOGO ENTREGUE!",
                 description: "Um projeto foi finalizado e enviado para avaliação da Diretoria.",
-                color: 9055202, // Roxo (Accent)
+                color: 9055202,
                 fields: [
                     { name: "👑 Projeto / Equipe", value: nome_projeto, inline: true },
                     { name: "💬 Discord do Líder", value: discord_lider, inline: true },
