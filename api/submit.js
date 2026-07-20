@@ -2,14 +2,12 @@ const inscricaoCache = new Set();
 const entregaCache = new Set();
 const rateLimitMap = new Map();
 
-// Função de segurança leve e rápida contra injeção de scripts
 const sanitize = (text) => {
     if (!text || typeof text !== 'string') return "Não informado";
     return text.replace(/</g, "&lt;").replace(/>/g, "&gt;").trim();
 };
 
 export default async function handler(req, res) {
-    // 1. Verificação Estrita de Método
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Método não permitido.' });
     }
@@ -17,14 +15,12 @@ export default async function handler(req, res) {
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'IP_DESCONHECIDO';
     const agora = new Date().getTime();
     
-    // 2. DATA LIMITE ATUALIZADA (20 DE JULHO DE 2026)
     const dataLimite = new Date("2026-07-20T23:59:59-03:00").getTime();
 
     if (agora > dataLimite) {
         return res.status(403).json({ error: 'O prazo do evento foi encerrado oficialmente.' });
     }
 
-    // 3. Sistema Anti-Spam / Rate Limit (10 Segundos)
     if (rateLimitMap.has(clientIp)) {
         const ultimoAcesso = rateLimitMap.get(clientIp);
         if (agora - ultimoAcesso < 10000) {
@@ -42,9 +38,6 @@ export default async function handler(req, res) {
 
     let payload = {};
 
-    // ==========================================
-    // ROTA A: PROCESSAMENTO DE INSCRIÇÕES
-    // ==========================================
     if (dados.tipo === 'inscricao') {
         if (inscricaoCache.has(clientIp)) return res.status(403).json({ error: 'Ação Bloqueada: Você já realizou a sua inscrição.' });
         
@@ -54,10 +47,10 @@ export default async function handler(req, res) {
 
         payload = {
             username: "NRG Game Jam Bot",
-            avatar_url: "https://i.imgur.com/8X16ABy.png", // Insira a logo da NRG aqui, se aplicável
+            avatar_url: "https://i.imgur.com/8X16ABy.png",
             embeds: [{
                 title: "🟢 NOVA INSCRIÇÃO RASTREADA",
-                color: 65450, // Verde Escuro NRG
+                color: 65450,
                 fields: [
                     { name: "🎮 Modalidade", value: sanitize(dados.modalidade), inline: true },
                     { name: "👑 Projeto/Equipe", value: sanitize(dados.nome_projeto), inline: true },
@@ -70,9 +63,6 @@ export default async function handler(req, res) {
         };
         inscricaoCache.add(clientIp);
     } 
-    // ==========================================
-    // ROTA B: PROCESSAMENTO DE ENTREGAS
-    // ==========================================
     else if (dados.tipo === 'entrega') {
         if (entregaCache.has(clientIp)) return res.status(403).json({ error: 'Ação Bloqueada: O seu projeto já foi entregue.' });
         
@@ -90,7 +80,7 @@ export default async function handler(req, res) {
             avatar_url: "https://i.imgur.com/8X16ABy.png", 
             embeds: [{
                 title: "🟣 PROJETO FINAL RECEBIDO!",
-                color: 9055202, // Roxo Escuro
+                color: 9055202,
                 fields: [
                     { name: "👑 Projeto/Equipe", value: sanitize(dados.nome_projeto), inline: true },
                     { name: "💬 Discord (Líder)", value: sanitize(dados.discord_lider), inline: true },
@@ -106,11 +96,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Requisição inválida ou corrompida.' });
     }
 
-    // ==========================================
-    // EXECUÇÃO DO WEBHOOK & API DO DISCORD
-    // ==========================================
     try {
-        // Dispara o alerta padrão no canal do Discord
         const discordReq = await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -121,7 +107,6 @@ export default async function handler(req, res) {
             throw new Error("Falha na sincronização do Webhook.");
         }
 
-        // SISTEMA DE CARGO AUTOMÁTICO (Aplicável APENAS na Inscrição)
         if (dados.tipo === 'inscricao') {
             const botToken = process.env.DISCORD_BOT_TOKEN;
             const guildId = process.env.DISCORD_GUILD_ID;
@@ -130,7 +115,6 @@ export default async function handler(req, res) {
             if (botToken && guildId && roleId) {
                 const limpoUser = sanitize(dados.discord_lider).trim();
                 
-                // Realiza a busca assíncrona do membro
                 const searchRes = await fetch(`https://discord.com/api/v10/guilds/${guildId}/members/search?query=${encodeURIComponent(limpoUser)}`, {
                     headers: { 'Authorization': `Bot ${botToken}` }
                 });
@@ -141,7 +125,6 @@ export default async function handler(req, res) {
                     if (members && members.length > 0) {
                         const userId = members[0].user.id;
                         
-                        // Atribui o cargo sem bloquear o processo de resposta
                         fetch(`https://discord.com/api/v10/guilds/${guildId}/members/${userId}/roles/${roleId}`, {
                             method: 'PUT',
                             headers: { 'Authorization': `Bot ${botToken}` }
@@ -154,7 +137,6 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true });
 
     } catch (error) {
-        // Se a requisição falhar, retira o IP do cache para não punir o usuário eternamente
         if (dados.tipo === 'inscricao') inscricaoCache.delete(clientIp);
         if (dados.tipo === 'entrega') entregaCache.delete(clientIp);
         return res.status(500).json({ error: 'Instabilidade na rede de servidores. Tente novamente em instantes.' });
