@@ -1,100 +1,186 @@
-// Cache em memória
-const jamIpCache = new Set();
+(function () {
+    'use strict';
 
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Método não permitido.' });
+    // ---------------- Countdown ----------------
+    var DATA_FINAL = new Date('2026-07-20T23:59:59-03:00').getTime();
+    var timerEl = document.getElementById('timer');
+    var elDias = document.getElementById('dias');
+    var elHoras = document.getElementById('horas');
+    var elMinutos = document.getElementById('minutos');
+    var elSegundos = document.getElementById('segundos');
+    var timerInterval = null;
+
+    function pad(n) {
+        return String(n).padStart(2, '0');
     }
 
-    // 1. TRAVA DA NOVA DATA: 20/07/2026 às 23:59 BRT
-    const agora = new Date();
-    const dataLimite = new Date("2026-07-20T23:59:59-03:00");
-    if (agora > dataLimite) {
-        return res.status(403).json({ error: 'O Evento foi encerrado.' });
-    }
+    function tick() {
+        var agora = Date.now();
+        var distancia = DATA_FINAL - agora;
 
-    // 2. BLOQUEIO DE SPAM
-    const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'IP_JAM_DESCONHECIDO';
-    const acaoId = `${clientIp}-${req.body.tipo}`;
-    
-    if (jamIpCache.has(acaoId)) {
-        return res.status(429).json({ error: 'Você já realizou esta ação.' });
-    }
-
-    const { tipo } = req.body;
-    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
-    
-    if (!webhookUrl) return res.status(500).json({ error: 'Erro de conexão com o Servidor Matriz (Webhook).' });
-
-    let payload = {};
-
-    // 3. ROTA A: INSCRIÇÃO
-    if (tipo === 'inscricao') {
-        const { modalidade, nome_projeto, discord_lider, membros_equipe } = req.body;
-        if (!modalidade || !nome_projeto || !discord_lider) {
-            return res.status(400).json({ error: 'Dados da inscrição incompletos.' });
+        if (distancia < 0) {
+            if (timerInterval) clearInterval(timerInterval);
+            timerEl.innerHTML = '<h2 class="countdown-revealed">O GRANDE CAMPEÃO FOI REVELADO!</h2>';
+            return;
         }
 
-        payload = {
-            username: "NRG Game Jam Core",
-            avatar_url: "https://i.imgur.com/8X16ABy.png",
-            embeds: [{
-                title: "🏆 NOVA INSCRIÇÃO - GAME JAM",
-                color: 65450,
-                fields: [
-                    { name: "🎮 Modalidade", value: modalidade, inline: true },
-                    { name: "👑 Nome / Equipe", value: nome_projeto, inline: true },
-                    { name: "💬 Discord do Líder", value: discord_lider, inline: true },
-                    { name: "👥 Membros Extras", value: membros_equipe || "Nenhum", inline: false },
-                ],
-                footer: { text: "NRG Studios Event System" },
-                timestamp: new Date().toISOString()
-            }]
-        };
-    } 
-    // 4. ROTA B: ENTREGA DO JOGO
-    else if (tipo === 'entrega') {
-        const { nome_projeto, discord_lider, link_jogo } = req.body;
-        if (!nome_projeto || !discord_lider || !link_jogo) {
-            return res.status(400).json({ error: 'Dados de entrega incompletos.' });
-        }
-
-        payload = {
-            username: "NRG Game Jam Core",
-            avatar_url: "https://i.imgur.com/8X16ABy.png",
-            embeds: [{
-                title: "🚀 NOVO JOGO ENTREGUE!",
-                description: "Um projeto foi finalizado e enviado para avaliação da Diretoria.",
-                color: 9055202,
-                fields: [
-                    { name: "👑 Projeto / Equipe", value: nome_projeto, inline: true },
-                    { name: "💬 Discord do Líder", value: discord_lider, inline: true },
-                    { name: "🔗 Link do Jogo", value: `[Clique aqui para acessar](${link_jogo})`, inline: false },
-                ],
-                footer: { text: "NRG Studios Event System" },
-                timestamp: new Date().toISOString()
-            }]
-        };
-    } 
-    else {
-        return res.status(400).json({ error: 'Tipo de requisição inválido.' });
+        elDias.textContent = pad(Math.floor(distancia / 86400000));
+        elHoras.textContent = pad(Math.floor((distancia % 86400000) / 3600000));
+        elMinutos.textContent = pad(Math.floor((distancia % 3600000) / 60000));
+        elSegundos.textContent = pad(Math.floor((distancia % 60000) / 1000));
     }
 
-    // 5. ENVIO FINAL PARA O DISCORD
-    try {
-        const discordReq = await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+    if (timerEl) {
+        tick(); // run immediately to avoid a flash of "00:00:00:00"
+        timerInterval = setInterval(tick, 1000);
+    }
+
+    // ---------------- Chat widget ----------------
+    var chatBtn = document.getElementById('ai-btn');
+    var chatWindow = document.getElementById('chat-window');
+    var closeChat = document.getElementById('close-chat');
+    var chatMessages = document.getElementById('chat-messages');
+    var chatInput = document.getElementById('chat-input');
+    var chatSend = document.getElementById('chat-send');
+
+    var MAX_MESSAGE_LENGTH = 300;
+    var SEND_COOLDOWN_MS = 600;
+    var sendLocked = false;
+
+    function toggleChat(forceOpen) {
+        if (!chatWindow) return;
+        var shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !chatWindow.classList.contains('open');
+        chatWindow.classList.toggle('open', shouldOpen);
+        chatBtn.setAttribute('aria-expanded', String(shouldOpen));
+        if (shouldOpen) chatInput.focus();
+    }
+
+    if (chatBtn) chatBtn.addEventListener('click', function () { toggleChat(); });
+    if (closeChat) closeChat.addEventListener('click', function () { toggleChat(false); });
+
+    // Build DOM nodes with textContent only — never innerHTML with user input.
+    function addUserMessage(text) {
+        var div = document.createElement('div');
+        div.className = 'msg-user';
+        div.textContent = text;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // AI responses are built from a fixed, hardcoded template — never from user input —
+    // so innerHTML here cannot be used as an XSS vector.
+    function addAiMessage(fragmentNodes) {
+        var div = document.createElement('div');
+        div.className = 'msg-ai';
+        var strong = document.createElement('strong');
+        strong.textContent = 'NRG System:';
+        div.appendChild(strong);
+        div.appendChild(document.createElement('br'));
+        div.appendChild(document.createElement('br'));
+        fragmentNodes.forEach(function (node) { div.appendChild(node); });
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function topicList() {
+        var topics = ['Prazo', 'Equipe', 'Prêmio', 'Tema', 'Jogo', 'IA', 'Segurança'];
+        var nodes = [];
+        var intro = document.createElement('span');
+        intro.textContent = 'Tente perguntar sobre um destes tópicos:';
+        nodes.push(intro);
+        topics.forEach(function (t) {
+            nodes.push(document.createElement('br'));
+            var strong = document.createElement('strong');
+            strong.textContent = '➔ ' + t;
+            nodes.push(strong);
         });
-
-        if (discordReq.ok) {
-            jamIpCache.add(acaoId);
-            return res.status(200).json({ success: true });
-        } else {
-            return res.status(500).json({ error: 'Falha na comunicação com o servidor da NRG.' });
-        }
-    } catch (error) {
-        return res.status(500).json({ error: 'Erro crítico interno no servidor.' });
+        return nodes;
     }
-}
+
+    function textNode(str) {
+        var span = document.createElement('span');
+        span.textContent = str;
+        return span;
+    }
+
+    function strongNode(str) {
+        var strong = document.createElement('strong');
+        strong.textContent = str;
+        return strong;
+    }
+
+    function normalize(str) {
+        return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function processAIResponse(msg) {
+        var text = normalize(msg);
+        var response;
+
+        if (/\bprazo\b|\bdata\b|\bdia\b|quando|horario/.test(text)) {
+            response = [textNode('A Game Jam foi encerrada no dia '), strongNode('20 de Julho'), textNode('. O vencedor já foi revelado!')];
+        } else if (/completo|pronto|jogavel|estado|\bjogo\b/.test(text)) {
+            response = [textNode("O projeto vencedor 'Cinematic Block' se destacou justamente por entregar uma experiência imersiva e livre de bugs críticos.")];
+        } else if (/equipe|\btime\b|\bsolo\b|grupo|junto/.test(text)) {
+            response = [textNode('O grande campeão desta edição competiu e desenvolveu o projeto de forma Solo.')];
+        } else if (/premio|ganha|vencer|recompensa|ganhador/.test(text)) {
+            response = [textNode('O campeão @guinomio garantiu o '), strongNode('Recrutamento Oficial'), textNode(' para a equipe de elite AAA da NRG Studios!')];
+        } else if (/\bia\b|chatgpt|copilot|toolbox|inteligencia/.test(text)) {
+            response = [textNode('Nós permitimos o uso de IA como suporte durante o evento, garantindo velocidade e otimização de código.')];
+        } else if (/\btema\b|sobre|estilo|assunto/.test(text)) {
+            response = [textNode('O tema foi totalmente LIVRE, o que permitiu o surgimento de projetos incrivelmente criativos nesta edição.')];
+        } else if (/seguro|navegador|seguranca|virus/.test(text)) {
+            response = [textNode('Recomendamos usar navegadores como '), strongNode('Brave'), textNode(' ou Chrome. A NRG opera sob proteção Cloudflare e AWS.')];
+        } else if (/regra|comando|ajuda|menu/.test(text)) {
+            response = [textNode('Aqui estão os módulos de informação disponíveis na minha memória:')].concat(topicList());
+        } else {
+            response = [textNode('Desculpe, meu banco de dados não encontrou essa exata informação.')].concat(topicList());
+        }
+
+        setTimeout(function () { addAiMessage(response); }, 500);
+    }
+
+    function handleSend() {
+        if (sendLocked || !chatInput) return;
+        var txt = chatInput.value.trim().slice(0, MAX_MESSAGE_LENGTH);
+        if (!txt) return;
+
+        sendLocked = true;
+        chatSend.disabled = true;
+
+        addUserMessage(txt);
+        chatInput.value = '';
+        processAIResponse(txt);
+
+        setTimeout(function () {
+            sendLocked = false;
+            chatSend.disabled = false;
+        }, SEND_COOLDOWN_MS);
+    }
+
+    if (chatSend) chatSend.addEventListener('click', handleSend);
+    if (chatInput) {
+        chatInput.setAttribute('maxlength', String(MAX_MESSAGE_LENGTH));
+        chatInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+    }
+
+    // ---------------- Lazy video start (saves mobile data until visible) ----------------
+    var video = document.querySelector('.video-wrapper video');
+    if (video && 'IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    video.play().catch(function () { /* autoplay blocked — user can use controls */ });
+                } else {
+                    video.pause();
+                }
+            });
+        }, { threshold: 0.35 });
+        observer.observe(video);
+    }
+})();
