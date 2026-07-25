@@ -1,9 +1,10 @@
 const jamIpCache = new Set();
 
 export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Método não permitido.' });
-    }
+    // Redireciona a lógica para o ficheiro principal para evitar código duplicado e erros
+    const submitHandler = (await import('./submit.js')).default;
+    return submitHandler(req, res);
+}
 
     const agora = new Date().getTime();
     
