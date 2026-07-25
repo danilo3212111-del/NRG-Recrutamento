@@ -50,8 +50,14 @@
         .form-group { margin-bottom: 25px; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #e0d0d0; margin-bottom: 10px; }
         .form-group input, .form-group select { width: 100%; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px; color: #fff; font-size: 15px; outline: none; }
-        .btn-primary { display: inline-block; width: 100%; padding: 18px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; font-size: 16px; font-weight: 900; text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer; text-align: center; }
+        .btn-primary { display: inline-block; width: 100%; padding: 18px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; font-size: 16px; font-weight: 900; text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer; text-align: center; text-decoration: none; transition: 0.3s; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,69,0,0.4); }
         
+        /* HALL DA FAMA CSS */
+        .hall-card { background: rgba(20, 15, 5, 0.8); border: 2px solid var(--accent); border-radius: 20px; padding: 40px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center; box-shadow: 0 0 50px rgba(255, 215, 0, 0.15); }
+        .hall-img { width: 100%; border-radius: 12px; border: 2px solid rgba(255, 215, 0, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8); object-fit: cover; aspect-ratio: 16/9; }
+        .btn-gold { background: linear-gradient(90deg, #FFD700, #FFA500) !important; color: #000 !important; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3) !important; }
+
         /* Chat e Flutuantes */
         .ai-float { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(90deg, var(--primary), var(--accent)); color: #000; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 1000; cursor: pointer; font-size: 30px; border: none; transition: 0.3s; }
         .chat-window { position: fixed; bottom: 110px; right: 30px; width: 360px; background: rgba(15,5,5,0.95); border: 1px solid var(--glass-border); border-radius: 16px; z-index: 1001; display: none; flex-direction: column; overflow: hidden; }
@@ -76,13 +82,16 @@
 
     <nav>
         <div class="logo">NRG STUDIOS</div>
-        <div class="nav-links"><a href="#jam-v2">A Game Jam V2</a></div>
+        <div class="nav-links">
+            <a href="#jam-v2">A Game Jam V2</a>
+            <a href="#hall-da-fama" style="color: var(--accent);">Hall da Fama</a>
+        </div>
     </nav>
 
     <header>
         <div class="hero-tag">V2: Prêmios em Robux</div>
         <h1>O Chão Não É <span>Seguro</span></h1>
-        <p>A Diretoria elevou o nível. Prepare suas habilidades. Ficar parado significa a derrota.</p>
+        <p>A Diretoria elevou o nível. Prepare suas habilidades de parkour e sobrevivência. Ficar parado significa a derrota.</p>
         <div class="countdown" id="timer">
             <div class="countdown-title" id="timer-title">Aguardando início...</div>
             <div class="time-box"><span id="dias">00</span><label>Dias</label></div>
@@ -104,51 +113,76 @@
 
                 <form id="jam-form">
                     <div class="form-group">
-                        <label>Tipo de Envio</label>
-                        <select id="tipo_envio" required>
+                        <label for="tipo_envio">Tipo de Envio</label>
+                        <select id="tipo_envio" name="tipo_envio" required aria-label="Selecione o tipo de envio">
                             <option value="inscricao">Inscrição (Início do Projeto)</option>
                             <option value="entrega">Entrega Final (Projeto Concluído)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Nome do Projeto / Equipe</label>
-                        <input type="text" id="nome_projeto" placeholder="Ex: Volcano Scripters" required>
+                        <label for="nome_projeto">Nome do Projeto / Equipe</label>
+                        <input type="text" id="nome_projeto" name="nome_projeto" placeholder="Ex: Volcano Scripters" required>
                     </div>
                     <div class="form-group">
-                        <label>Usuário do Discord (Líder)</label>
-                        <input type="text" id="discord_lider" placeholder="Ex: @dev_legend" required>
+                        <label for="discord_lider">Usuário do Discord (Líder)</label>
+                        <input type="text" id="discord_lider" name="discord_lider" placeholder="Ex: @dev_legend" required>
                     </div>
                     <div class="form-group">
-                        <label>Link do Jogo (Roblox) - Apenas para Entrega Final</label>
-                        <input type="url" id="link_jogo" placeholder="https://roblox.com/games/...">
+                        <label for="link_jogo">Link do Jogo (Roblox) - Apenas para Entrega</label>
+                        <input type="url" id="link_jogo" name="link_jogo" placeholder="https://roblox.com/games/...">
                     </div>
                     <button type="submit" id="btn-submit" class="btn-primary">Enviar Dados</button>
-                    <div id="status-msg"></div>
+                    <div id="status-msg" aria-live="polite"></div>
                 </form>
+            </div>
+        </section>
+
+        <section id="hall-da-fama">
+            <h2 class="section-title" style="color: var(--accent); text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);">🏆 Hall da Fama - Edição 1</h2>
+
+            <div class="hall-card">
+                <div style="flex: 1; min-width: 300px; z-index: 1;">
+                    <img src="https://tr.rbxcdn.com/347494cc3123da6c888258e72750e39a/768/432/Image/Png" alt="Thumbnail do jogo Cinematic Block" class="hall-img" loading="lazy">
+                </div>
+                <div style="flex: 1.5; min-width: 300px; z-index: 1;">
+                    <div style="display: inline-block; padding: 6px 16px; background: rgba(255, 215, 0, 0.15); border: 1px solid #FFD700; color: #FFD700; border-radius: 50px; font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;">
+                        👑 Campeão V1
+                    </div>
+                    <h3 style="font-size: clamp(32px, 5vw, 48px); font-weight: 900; color: #fff; margin-bottom: 10px; text-transform: uppercase;">Cinematic Block</h3>
+                    <p style="font-size: 18px; color: var(--accent); font-weight: 900; margin-bottom: 20px;">Desenvolvedor Líder: @guinomio</p>
+                    <p style="color: #d0d0e0; font-size: 15px; line-height: 1.8; margin-bottom: 35px;">
+                        Com mecânicas perfeitamente otimizadas e uma atmosfera imersiva, o Cinematic Block conquistou a comunidade. O projeto provou ter o padrão técnico da NRG Studios, garantindo a vaga oficial no nosso esquadrão de elite!
+                    </p>
+                    <a href="https://www.roblox.com/pt/games/81154051683522/Cinematic-Block" target="_blank" class="btn-primary btn-gold" style="width: auto;">Jogar Vencedor V1</a>
+                </div>
             </div>
         </section>
     </main>
 
-    <button type="button" class="ai-float" id="ai-btn" title="NRG A.I.">🤖</button>
+    <button type="button" class="ai-float" id="ai-btn" title="Assistente IA" aria-label="Abrir Chatbot">🤖</button>
     <div class="chat-window" id="chat-window">
         <div class="chat-header">
             <h3>🤖 NRG System Core</h3>
-            <button type="button" class="close-chat" id="close-chat">✕</button>
+            <button type="button" class="close-chat" id="close-chat" aria-label="Fechar">✕</button>
         </div>
-        <div class="chat-messages" id="chat-messages">
+        <div class="chat-messages" id="chat-messages" aria-live="polite">
             <div class="msg-ai"><strong>NRG A.I:</strong><br>O tema é "O Chão Não É Seguro". O portal abrirá dia 1 de Agosto.</div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Pergunte sobre regras...">
+            <input type="text" id="chat-input" placeholder="Pergunte sobre regras..." aria-label="Sua mensagem">
             <button type="button" id="chat-send">Enviar</button>
         </div>
     </div>
+
+    <footer>
+        <p>© 2026 NRG Studios. Excelência AAA em Desenvolvimento.</p>
+    </footer>
 
     <script>
     (function () {
         'use strict';
         
-        // ---------------- CRONÔMETRO INTELIGENTE V2 ----------------
+        // CRONÔMETRO
         const dataInicio = new Date('2026-08-01T00:00:00-03:00').getTime();
         const dataFim = new Date('2026-08-15T23:59:59-03:00').getTime();
         
@@ -190,7 +224,7 @@
         setInterval(atualizarSistema, 1000);
         atualizarSistema();
 
-        // ---------------- CHATBOT ----------------
+        // CHATBOT
         const chatBtn = document.getElementById('ai-btn');
         const chatWindow = document.getElementById('chat-window');
         const closeChat = document.getElementById('close-chat');
@@ -214,15 +248,14 @@
             if (!txt) return;
             addMsg(txt, true);
             chatInput.value = '';
-            
             setTimeout(() => {
-                let resp = "O tema é 'O Chão Não É Seguro'. Você pode fazer jogos de parkour, plataformas caindo ou lava subindo!";
+                let resp = "O tema é 'O Chão Não É Seguro'. Faça jogos de parkour, plataformas caindo ou sobrevivência!";
                 if (txt.toLowerCase().includes("premio") || txt.toLowerCase().includes("robux")) resp = "A V2 terá premiação em ROBUX garantida!";
                 addMsg(resp, false);
             }, 600);
         });
 
-        // ---------------- ENVIO DO FORMULÁRIO (FETCH API) ----------------
+        // ENVIO DO FORMULÁRIO (APONTANDO PARA API/SUBMIT)
         const form = document.getElementById('jam-form');
         const btnSubmit = document.getElementById('btn-submit');
         const statusMsg = document.getElementById('status-msg');
@@ -232,7 +265,7 @@
             btnSubmit.disabled = true;
             statusMsg.style.display = 'block';
             statusMsg.style.color = '#ff4500';
-            statusMsg.textContent = 'Enviando dados para a Diretoria...';
+            statusMsg.textContent = 'A comunicar com o servidor...';
 
             const dados = {
                 tipo: document.getElementById('tipo_envio').value,
@@ -242,8 +275,8 @@
             };
 
             try {
-                // Aqui o HTML se comunica com o Back-end (pasta api)
-                const req = await fetch('/api/registro', {
+                // Rota corrigida para a sua pasta existente (api/submit)
+                const req = await fetch('/api/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dados)
@@ -252,14 +285,15 @@
 
                 if (req.ok) {
                     statusMsg.style.color = '#00ff88';
-                    statusMsg.textContent = 'Sucesso! Dados enviados para o Discord da NRG.';
+                    statusMsg.textContent = 'Sucesso! Projeto registado na Diretoria.';
+                    form.reset();
                 } else {
                     statusMsg.style.color = '#ff0000';
                     statusMsg.textContent = res.error || 'Erro ao processar dados.';
                 }
             } catch (err) {
                 statusMsg.style.color = '#ff0000';
-                statusMsg.textContent = 'Erro de conexão. Tente novamente.';
+                statusMsg.textContent = 'Erro de ligação ao Discord. Tente novamente.';
             }
             btnSubmit.disabled = false;
         });
