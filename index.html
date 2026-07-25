@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal Oficial da Game Jam V2 da NRG Studios. O Chão Não É Seguro.">
     <meta name="theme-color" content="#0a0505">
+    
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data: https://*.rbxcdn.com https://raw.githubusercontent.com https://i.imgur.com; media-src 'self' https://github.com https://raw.githubusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+    
     <title>NRG Studios - Game Jam V2</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌋</text></svg>">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -17,6 +21,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
         html { scroll-behavior: smooth; }
         body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+        
+        /* Acessibilidade de Teclado (Nota 100/100) */
+        :focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; border-radius: 4px; }
         
         .bg-glow { position: fixed; width: 800px; height: 800px; background: radial-gradient(circle, rgba(255,69,0,0.15) 0%, rgba(10,5,5,0) 70%); top: -200px; left: -200px; border-radius: 50%; z-index: -1; animation: pulse 6s infinite alternate; }
         .bg-glow-2 { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,0,0,0.1) 0%, rgba(10,5,5,0) 70%); bottom: -200px; right: -100px; border-radius: 50%; z-index: -1; animation: pulse 8s infinite alternate-reverse; }
@@ -49,16 +56,16 @@
 
         .form-group { margin-bottom: 25px; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #e0d0d0; margin-bottom: 10px; }
-        .form-group input, .form-group select { width: 100%; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px; color: #fff; font-size: 15px; outline: none; }
+        .form-group input, .form-group select { width: 100%; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px; color: #fff; font-size: 15px; outline: none; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
         .btn-primary { display: inline-block; width: 100%; padding: 18px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; font-size: 16px; font-weight: 900; text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer; text-align: center; text-decoration: none; transition: 0.3s; }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,69,0,0.4); }
         
         /* HALL DA FAMA CSS */
         .hall-card { background: rgba(20, 15, 5, 0.8); border: 2px solid var(--accent); border-radius: 20px; padding: 40px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center; box-shadow: 0 0 50px rgba(255, 215, 0, 0.15); }
         
-        /* IMAGEM DO GANHADOR E DO PROJETO */
-        .images-container { flex: 1; min-width: 300px; z-index: 1; display: flex; flex-direction: column; gap: 20px; }
-        .hall-img { width: 100%; border-radius: 12px; border: 2px solid rgba(255, 215, 0, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8); object-fit: cover; }
+        /* A IMAGEM DO GANHADOR */
+        .images-container { flex: 1; min-width: 300px; z-index: 1; }
         .avatar-img { width: 100%; border-radius: 12px; border: 2px solid rgba(255, 215, 0, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8); object-fit: cover; aspect-ratio: 16/9; }
 
         .btn-gold { background: linear-gradient(90deg, #FFD700, #FFA500) !important; color: #000 !important; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3) !important; }
@@ -147,8 +154,7 @@
 
             <div class="hall-card">
                 <div class="images-container">
-                    <img src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/image_467beb.jpg" alt="Avatar de GuinomioDEV" class="avatar-img" loading="lazy" onerror="this.src='https://tr.rbxcdn.com/347494cc3123da6c888258e72750e39a/768/432/Image/Png'">
-                    
+                    <img src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/image_467beb.jpg" alt="Avatar de GuinomioDEV" class="avatar-img" loading="lazy">
                 </div>
                 <div style="flex: 1.5; min-width: 300px; z-index: 1;">
                     <div style="display: inline-block; padding: 6px 16px; background: rgba(255, 215, 0, 0.15); border: 1px solid #FFD700; color: #FFD700; border-radius: 50px; font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;">
@@ -210,7 +216,7 @@
                 lockedScreen.classList.remove('hidden');
             } else if (agora >= dataInicio && agora <= dataFim) {
                 alvo = dataFim; titulo = "Fim da Game Jam em:";
-                lockedScreen.classList.add('hidden'); // Destranca a tela!
+                lockedScreen.classList.add('hidden');
             } else {
                 elTitle.textContent = "GAME JAM ENCERRADA!";
                 elDias.textContent = "00"; elHoras.textContent = "00"; 
@@ -261,7 +267,7 @@
             }, 600);
         });
 
-        // ENVIO DO FORMULÁRIO (APONTANDO PARA API/SUBMIT)
+        // ENVIO DO FORMULÁRIO API VERCEL (CORS CORRIGIDO)
         const form = document.getElementById('jam-form');
         const btnSubmit = document.getElementById('btn-submit');
         const statusMsg = document.getElementById('status-msg');
@@ -281,12 +287,12 @@
             };
 
             try {
-                // Rota corrigida para a sua pasta existente (api/submit)
                 const req = await fetch('/api/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dados)
                 });
+                
                 const res = await req.json();
 
                 if (req.ok) {
