@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,7 +55,12 @@
         
         /* HALL DA FAMA CSS */
         .hall-card { background: rgba(20, 15, 5, 0.8); border: 2px solid var(--accent); border-radius: 20px; padding: 40px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center; box-shadow: 0 0 50px rgba(255, 215, 0, 0.15); }
-        .hall-img { width: 100%; border-radius: 12px; border: 2px solid rgba(255, 215, 0, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8); object-fit: cover; aspect-ratio: 16/9; }
+        
+        /* IMAGEM DO GANHADOR E DO PROJETO */
+        .images-container { flex: 1; min-width: 300px; z-index: 1; display: flex; flex-direction: column; gap: 20px; }
+        .hall-img { width: 100%; border-radius: 12px; border: 2px solid rgba(255, 215, 0, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8); object-fit: cover; }
+        .avatar-img { width: 100%; border-radius: 12px; border: 2px solid rgba(255, 215, 0, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8); object-fit: cover; aspect-ratio: 16/9; }
+
         .btn-gold { background: linear-gradient(90deg, #FFD700, #FFA500) !important; color: #000 !important; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3) !important; }
 
         /* Chat e Flutuantes */
@@ -89,17 +94,17 @@
     </nav>
 
     <header>
-        <div class="hero-tag">V2: Prêmios em Robux</div>
+        <div class="hero-tag">V2: Prémios em Robux</div>
         <h1>O Chão Não É <span>Seguro</span></h1>
-        <p>A Diretoria elevou o nível. Prepare suas habilidades de parkour e sobrevivência. Ficar parado significa a derrota.</p>
+        <p>A Diretoria elevou o nível. Prepare as suas habilidades de parkour e sobrevivência. Ficar parado significa a derrota.</p>
         <div class="countdown" id="timer">
-            <div class="countdown-title" id="timer-title">Aguardando início...</div>
+            <div class="countdown-title" id="timer-title">A aguardar início...</div>
             <div class="time-box"><span id="dias">00</span><label>Dias</label></div>
             <div class="time-box"><span id="horas">00</span><label>Horas</label></div>
             <div class="time-box"><span id="minutos">00</span><label>Minutos</label></div>
             <div class="time-box"><span id="segundos">00</span><label>Segundos</label></div>
         </div>
-        <a href="#jam-v2" class="btn-primary" style="width: auto;">Acessar Portal</a>
+        <a href="#jam-v2" class="btn-primary" style="width: auto;">Aceder ao Portal</a>
     </header>
 
     <main>
@@ -120,11 +125,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="nome_projeto">Nome do Projeto / Equipe</label>
+                        <label for="nome_projeto">Nome do Projeto / Equipa</label>
                         <input type="text" id="nome_projeto" name="nome_projeto" placeholder="Ex: Volcano Scripters" required>
                     </div>
                     <div class="form-group">
-                        <label for="discord_lider">Usuário do Discord (Líder)</label>
+                        <label for="discord_lider">Utilizador do Discord (Líder)</label>
                         <input type="text" id="discord_lider" name="discord_lider" placeholder="Ex: @dev_legend" required>
                     </div>
                     <div class="form-group">
@@ -141,8 +146,9 @@
             <h2 class="section-title" style="color: var(--accent); text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);">🏆 Hall da Fama - Edição 1</h2>
 
             <div class="hall-card">
-                <div style="flex: 1; min-width: 300px; z-index: 1;">
-                    <img src="https://tr.rbxcdn.com/347494cc3123da6c888258e72750e39a/768/432/Image/Png" alt="Thumbnail do jogo Cinematic Block" class="hall-img" loading="lazy">
+                <div class="images-container">
+                    <img src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/image_467beb.jpg" alt="Avatar de GuinomioDEV" class="avatar-img" loading="lazy" onerror="this.src='https://tr.rbxcdn.com/347494cc3123da6c888258e72750e39a/768/432/Image/Png'">
+                    
                 </div>
                 <div style="flex: 1.5; min-width: 300px; z-index: 1;">
                     <div style="display: inline-block; padding: 6px 16px; background: rgba(255, 215, 0, 0.15); border: 1px solid #FFD700; color: #FFD700; border-radius: 50px; font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;">
@@ -249,7 +255,7 @@
             addMsg(txt, true);
             chatInput.value = '';
             setTimeout(() => {
-                let resp = "O tema é 'O Chão Não É Seguro'. Faça jogos de parkour, plataformas caindo ou sobrevivência!";
+                let resp = "O tema é 'O Chão Não É Seguro'. Faça jogos de parkour, plataformas a cair ou sobrevivência!";
                 if (txt.toLowerCase().includes("premio") || txt.toLowerCase().includes("robux")) resp = "A V2 terá premiação em ROBUX garantida!";
                 addMsg(resp, false);
             }, 600);
