@@ -30,9 +30,10 @@
   --t:      .18s ease;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;font-size:16px;scrollbar-color:var(--s3) transparent;scrollbar-width:thin}
-html::-webkit-scrollbar{width:5px}
-html::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+html{scroll-behavior:smooth;font-size:16px;scrollbar-color:var(--dim) var(--s1);scrollbar-width:auto}
+html::-webkit-scrollbar{width:8px;background:var(--s1)}
+html::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px;border:2px solid var(--s1)}
+html::-webkit-scrollbar-thumb:hover{background:var(--sub)}
 body{
   font-family:'Inter',system-ui,sans-serif;
   background:var(--bg);color:var(--text);
@@ -95,16 +96,34 @@ nav{
 .hero h1 em{font-style:normal;color:var(--acc)}
 
 /* PRIZE BLOCK */
-.prize-block{
-  display:inline-flex;align-items:center;gap:12px;
-  margin:28px 0 36px;
-  padding:14px 24px;
+.prize-wrap{margin:28px 0 36px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.prize-main{
+  display:inline-flex;align-items:center;gap:20px;
+  padding:20px 28px;
   background:var(--s1);border:1px solid var(--bd2);
-  border-radius:var(--r);
+  border-radius:12px;position:relative;overflow:hidden;
 }
-.prize-label{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.08em}
-.prize-value{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.01em}
-.prize-sep{width:1px;height:32px;background:var(--bd2)}
+.prize-main::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(249,115,22,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.prize-icon{
+  width:48px;height:48px;border-radius:10px;
+  background:var(--acc-s);border:1px solid var(--acc-b);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.prize-info{text-align:left}
+.prize-eyebrow{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.prize-amount{font-size:40px;font-weight:900;color:var(--acc);letter-spacing:-.03em;line-height:1}
+.prize-amount em{font-style:normal;color:var(--text)}
+.prize-currency{font-size:12px;font-weight:600;color:var(--sub);margin-top:3px}
+.prize-vsep{width:1px;height:48px;background:var(--bd);flex-shrink:0}
+.prize-extras{display:flex;flex-direction:column;gap:10px;text-align:left}
+.pei-label{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.pei-val{font-size:13px;font-weight:600;color:var(--sub)}
+/* UGC MODE: troca .prize-amount por <img class="prize-ugc-img"> */
+.prize-ugc-img{width:64px;height:64px;object-fit:contain;border-radius:8px}
 
 /* TIMER */
 .timer-wrap{margin-bottom:36px}
@@ -346,8 +365,8 @@ footer{
   .nav-r{gap:16px}
   .nav-r a{display:none}
   .hero{padding:80px 16px 48px}
-  .prize-block{flex-direction:column;gap:8px;text-align:center}
-  .prize-sep{display:none}
+  .prize-main{flex-wrap:wrap;gap:14px;text-align:left}
+  .prize-vsep{display:none}
   .timer{gap:5px}
   .tbox{min-width:60px;padding:12px 10px}
   .tbox-n{font-size:24px}
@@ -377,20 +396,34 @@ footer{
 
     <h1>O Chão Não<br>É <em>Seguro</em></h1>
 
-    <div class="prize-block">
-      <div>
-        <div class="prize-label">Primeiro Lugar</div>
-        <div class="prize-value">Prémio em Robux</div>
-      </div>
-      <div class="prize-sep"></div>
-      <div>
-        <div class="prize-label">Plataforma</div>
-        <div class="prize-value">Roblox</div>
-      </div>
-      <div class="prize-sep"></div>
-      <div>
-        <div class="prize-label">Equipa</div>
-        <div class="prize-value">1 – 4 pessoas</div>
+    <div class="prize-wrap">
+      <!--
+        MODO ROBUX (atual): mostrar .prize-amount com valor
+        MODO UGC: substituir .prize-amount por <img class="prize-ugc-img" src="ugc.png" alt="UGC">
+      -->
+      <div class="prize-main">
+        <div class="prize-icon">
+          <!-- Ícone R$ do Robux -->
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <text x="3" y="19" font-family="Arial Black,sans-serif" font-weight="900" font-size="18" fill="#f97316">R$</text>
+          </svg>
+        </div>
+        <div class="prize-info">
+          <div class="prize-eyebrow">Primeiro Lugar</div>
+          <div class="prize-amount"><em>300</em> R$</div>
+          <div class="prize-currency">Robux garantido</div>
+        </div>
+        <div class="prize-vsep"></div>
+        <div class="prize-extras">
+          <div>
+            <div class="pei-label">Plataforma</div>
+            <div class="pei-val">Roblox</div>
+          </div>
+          <div>
+            <div class="pei-label">Equipa</div>
+            <div class="pei-val">1 – 4 pessoas</div>
+          </div>
+        </div>
       </div>
     </div>
 
