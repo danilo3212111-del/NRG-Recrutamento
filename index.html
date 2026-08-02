@@ -125,7 +125,7 @@ nav{
 .prize-currency{font-size:12px;font-weight:500;color:var(--dim);margin-top:5px}
 .prize-vsep{width:1px;height:52px;background:var(--bd);flex-shrink:0}
 .prize-extras{display:flex;flex-direction:column;gap:12px;text-align:left}
-.pei-label{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.pei-label{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
 .pei-val{font-size:13px;font-weight:600;color:var(--sub)}
 /* UGC MODE: troca .prize-icon conteúdo por <img class="prize-ugc-img"> */
 .prize-ugc-img{width:52px;height:52px;object-fit:contain;border-radius:8px}
@@ -149,8 +149,8 @@ nav{
   line-height:1;font-variant-numeric:tabular-nums;
   letter-spacing:-.02em;
 }
-.tbox-l{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-top:4px}
-.tsep{font-size:20px;font-weight:700;color:var(--dim);margin-bottom:14px}
+.tbox-l{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.07em;margin-top:4px}
+.tsep{font-size:20px;font-weight:700;color:var(--sub);margin-bottom:14px}
 
 /* BTN */
 .btn{
@@ -524,11 +524,11 @@ footer{
     </div>
 
     <div class="form-tabs" role="tablist">
-      <button class="tab active" id="tab-ins" role="tab" aria-selected="true"  aria-controls="panel-form" type="button">Inscrição</button>
-      <button class="tab"        id="tab-ent" role="tab" aria-selected="false" aria-controls="panel-form" type="button">Entrega Final</button>
+      <button class="tab active" id="tab-ins" role="tab" aria-selected="true"  aria-controls="jam-form" type="button">Inscrição</button>
+      <button class="tab"        id="tab-ent" role="tab" aria-selected="false" aria-controls="jam-form" type="button">Entrega Final</button>
     </div>
 
-    <form id="jam-form" novalidate>
+    <form id="jam-form" role="tabpanel" novalidate>
       <div class="field">
         <label for="f-nome">Nome do Projeto / Equipa</label>
         <input type="text" id="f-nome" placeholder="Ex: Volcano Scripters" maxlength="80" required autocomplete="off">
@@ -592,15 +592,11 @@ footer{
           id="credits-vid"
           class="credits-video"
           autoplay muted loop playsinline
-          oncanplay="this.style.display='block';document.getElementById('vid-fallback').style.display='none'"
-          onerror="this.style.display='none';document.getElementById('vid-fallback').style.display='flex'"
+          style="display:none"
         >
-          <!-- O vídeo será carregado assim que o Polares publicar no repositório -->
-          <source src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/gamejam.mp4" type="video/mp4">
-          <source src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/video.mp4" type="video/mp4">
-          <source src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/trailer.mp4" type="video/mp4">
+          <source src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios-01/main/NRG_Studios%2001.mp4" type="video/mp4">
         </video>
-        <div class="credits-video-placeholder" id="vid-fallback" style="display:flex">
+        <div class="credits-video-placeholder" id="vid-fallback">
           <span>🎬</span>
           <p>Vídeo da Game Jam</p>
           <small>Disponível em breve</small>
@@ -792,6 +788,22 @@ function toggleChat(){
   fab.setAttribute('aria-expanded',o);
   if(o) setTimeout(function(){inp.focus()},60);
 }
+
+/* ── VÍDEO CRÉDITOS ── */
+(function(){
+  var vid=document.getElementById('credits-vid');
+  var fb=document.getElementById('vid-fallback');
+  if(!vid||!fb) return;
+  function showVideo(){vid.style.display='block';fb.style.display='none'}
+  function showFallback(){vid.style.display='none';fb.style.display='flex'}
+  vid.addEventListener('canplay',showVideo);
+  vid.addEventListener('error',showFallback);
+  // Timeout: se ao fim de 4s o vídeo não carregou, mostra fallback
+  setTimeout(function(){
+    if(vid.readyState<2) showFallback();
+  },4000);
+  vid.load();
+})();
 
 fab.addEventListener('click',toggleChat);
 cx.addEventListener('click',function(){win.classList.remove('open');fab.setAttribute('aria-expanded','false');fab.focus()});
