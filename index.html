@@ -109,21 +109,25 @@ nav{
   pointer-events:none;
 }
 .prize-icon{
-  width:48px;height:48px;border-radius:10px;
+  width:52px;height:52px;border-radius:10px;
   background:var(--acc-s);border:1px solid var(--acc-b);
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:18px;font-weight:900;color:var(--acc);
+  font-family:'Inter',sans-serif;letter-spacing:-.03em;
+  user-select:none;
 }
 .prize-info{text-align:left}
-.prize-eyebrow{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
-.prize-amount{font-size:40px;font-weight:900;color:var(--acc);letter-spacing:-.03em;line-height:1}
-.prize-amount em{font-style:normal;color:var(--text)}
-.prize-currency{font-size:12px;font-weight:600;color:var(--sub);margin-top:3px}
-.prize-vsep{width:1px;height:48px;background:var(--bd);flex-shrink:0}
-.prize-extras{display:flex;flex-direction:column;gap:10px;text-align:left}
-.pei-label{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.prize-eyebrow{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.prize-amount{font-size:44px;font-weight:900;color:var(--text);letter-spacing:-.04em;line-height:1;display:flex;align-items:baseline;gap:6px}
+.prize-amount strong{color:var(--acc)}
+.prize-amount span{font-size:20px;font-weight:700;color:var(--sub)}
+.prize-currency{font-size:12px;font-weight:500;color:var(--dim);margin-top:5px}
+.prize-vsep{width:1px;height:52px;background:var(--bd);flex-shrink:0}
+.prize-extras{display:flex;flex-direction:column;gap:12px;text-align:left}
+.pei-label{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
 .pei-val{font-size:13px;font-weight:600;color:var(--sub)}
-/* UGC MODE: troca .prize-amount por <img class="prize-ugc-img"> */
-.prize-ugc-img{width:64px;height:64px;object-fit:contain;border-radius:8px}
+/* UGC MODE: troca .prize-icon conteúdo por <img class="prize-ugc-img"> */
+.prize-ugc-img{width:52px;height:52px;object-fit:contain;border-radius:8px}
 
 /* TIMER */
 .timer-wrap{margin-bottom:36px}
@@ -374,6 +378,62 @@ footer{
   .form-card{padding:20px}
   .chat-win{width:calc(100vw - 24px);right:12px}
 }
+
+/* ── CRÉDITOS ── */
+.credits-card{
+  background:var(--s1);border:1px solid var(--bd);
+  border-radius:16px;overflow:hidden;
+  max-width:1080px;margin:0 auto;
+}
+.credits-inner{
+  display:flex;flex-wrap:wrap;align-items:stretch;
+}
+.credits-text{
+  flex:1;min-width:260px;
+  padding:40px;
+  display:flex;flex-direction:column;justify-content:center;gap:16px;
+}
+.credits-title{
+  font-size:clamp(22px,3vw,32px);font-weight:800;
+  letter-spacing:-.02em;color:var(--text);line-height:1.2;
+}
+.credits-link{
+  color:var(--acc);text-decoration:none;
+  border-bottom:2px solid var(--acc-b);
+  transition:border-color var(--t);
+}
+.credits-link:hover{border-color:var(--acc)}
+.credits-sub{font-size:14px;color:var(--sub);line-height:1.6}
+.credits-btn{display:inline-flex;width:auto}
+.credits-video-wrap{
+  flex:1;min-width:280px;min-height:220px;
+  position:relative;overflow:hidden;
+  background:var(--s2);border-left:1px solid var(--bd);
+}
+.credits-video{
+  width:100%;height:100%;object-fit:cover;
+  display:block;
+}
+.credits-video-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:14px 18px;
+  background:linear-gradient(to top,rgba(9,9,11,.85) 0%,transparent 100%);
+}
+.credits-video-label{
+  font-size:11px;font-weight:600;color:var(--sub);
+  text-transform:uppercase;letter-spacing:.08em;
+}
+.credits-video-placeholder{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;
+  color:var(--dim);font-size:13px;
+}
+.credits-video-placeholder span{font-size:32px}
+@media(max-width:640px){
+  .credits-text{padding:24px 20px}
+  .credits-video-wrap{min-height:180px;border-left:none;border-top:1px solid var(--bd)}
+}
 </style>
 </head>
 <body>
@@ -403,15 +463,15 @@ footer{
       -->
       <div class="prize-main">
         <div class="prize-icon">
-          <!-- Ícone R$ do Robux -->
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <text x="3" y="19" font-family="Arial Black,sans-serif" font-weight="900" font-size="18" fill="#f97316">R$</text>
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30">
+            <path d="M20 2 L35.98 11 L35.98 29 L20 38 L4.02 29 L4.02 11 Z" fill="rgba(249,115,22,0.15)" stroke="#f97316" stroke-width="1.5"/>
+            <text x="20" y="26" text-anchor="middle" font-family="Inter,Arial Black,sans-serif" font-weight="900" font-size="16" fill="#f97316">R</text>
           </svg>
         </div>
         <div class="prize-info">
           <div class="prize-eyebrow">Primeiro Lugar</div>
-          <div class="prize-amount"><em>300</em> R$</div>
-          <div class="prize-currency">Robux garantido</div>
+          <div class="prize-amount"><strong>300</strong><span>Robux</span></div>
+          <div class="prize-currency">Prémio garantido ao vencedor</div>
         </div>
         <div class="prize-vsep"></div>
         <div class="prize-extras">
@@ -514,7 +574,38 @@ footer{
 </div>
 
 <div class="divider"></div>
-<footer>© 2026 NRG Studios</footer>
+
+<!-- CRÉDITOS -->
+<div class="section" id="creditos" style="padding:60px 24px">
+  <div class="credits-card">
+    <div class="credits-inner">
+      <div class="credits-text">
+        <div class="sec-tag" style="margin-bottom:10px">Créditos</div>
+        <h2 class="credits-title">Desenvolvido por<br><a href="https://polaris-2025.github.io/NRG-Studios/" target="_blank" rel="noopener noreferrer" class="credits-link">Polares</a></h2>
+        <p class="credits-sub">Arquitetura, design e infraestrutura do portal NRG Studios Game Jam.</p>
+        <a href="https://polaris-2025.github.io/NRG-Studios/" target="_blank" rel="noopener noreferrer" class="btn btn-ghost credits-btn">Ver portfólio →</a>
+      </div>
+      <div class="credits-video-wrap">
+        <video class="credits-video" autoplay muted loop playsinline poster="">
+          <source src="credits.mp4" type="video/mp4">
+          <!-- Substitua credits.mp4 pelo caminho do teu vídeo -->
+          <div class="credits-video-placeholder">
+            <span>🎬</span>
+            <p>Vídeo de créditos</p>
+          </div>
+        </video>
+        <div class="credits-video-overlay">
+          <span class="credits-video-label">NRG Studios × Polares</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<footer>
+  <p>© 2026 NRG Studios · Desenvolvido por <a href="https://polaris-2025.github.io/NRG-Studios/" target="_blank" rel="noopener noreferrer" style="color:var(--sub);text-decoration:underline;text-underline-offset:3px">Polares</a></p>
+</footer>
 
 <!-- CHATBOT -->
 <button class="chat-fab" id="chat-fab"
@@ -637,7 +728,7 @@ var body=$('chat-body'),inp=$('chat-in'),sendBtn=$('chat-send');
 
 var RULES=[
   {q:['prémio','premio','robux','ganhar','recompensa','prize'],
-   a:'A premiação é em Robux. O valor exato será anunciado próximo da data de entrega. Fique atento ao Discord da NRG Studios.'},
+   a:'A premiação do primeiro lugar é <b>300 Robux</b>, garantido ao vencedor.'},
   {q:['tema','assunto','sobre o quê','de que'],
    a:'O tema da V2 é <b>"O Chão Não É Seguro"</b>. O teu jogo deve explorar essa ideia — parkour, plataformas instáveis, sobrevivência, etc.'},
   {q:['data','prazo','quando','início','começa','abre','fecha','termina','encerra','agosto'],
