@@ -430,6 +430,7 @@ footer{
   color:var(--dim);font-size:13px;
 }
 .credits-video-placeholder span{font-size:32px}
+.credits-video-placeholder small{font-size:11px;color:var(--dim);margin-top:2px}
 @media(max-width:640px){
   .credits-text{padding:24px 20px}
   .credits-video-wrap{min-height:180px;border-left:none;border-top:1px solid var(--bd)}
@@ -582,18 +583,27 @@ footer{
       <div class="credits-text">
         <div class="sec-tag" style="margin-bottom:10px">Créditos</div>
         <h2 class="credits-title">Desenvolvido por<br><a href="https://polaris-2025.github.io/NRG-Studios/" target="_blank" rel="noopener noreferrer" class="credits-link">Polares</a></h2>
-        <p class="credits-sub">Arquitetura, design e infraestrutura do portal NRG Studios Game Jam.</p>
-        <a href="https://polaris-2025.github.io/NRG-Studios/" target="_blank" rel="noopener noreferrer" class="btn btn-ghost credits-btn">Ver portfólio →</a>
+        <p class="credits-sub">Portal, design e infraestrutura do NRG Studios Game Jam V2.</p>
+        <a href="https://polaris-2025.github.io/NRG-Studios/" target="_blank" rel="noopener noreferrer" class="btn btn-ghost credits-btn">Ver site →</a>
       </div>
       <div class="credits-video-wrap">
-        <video class="credits-video" autoplay muted loop playsinline poster="">
-          <source src="credits.mp4" type="video/mp4">
-          <!-- Substitua credits.mp4 pelo caminho do teu vídeo -->
-          <div class="credits-video-placeholder">
-            <span>🎬</span>
-            <p>Vídeo de créditos</p>
-          </div>
+        <video
+          id="credits-vid"
+          class="credits-video"
+          autoplay muted loop playsinline
+          oncanplay="this.style.display='block';document.getElementById('vid-fallback').style.display='none'"
+          onerror="this.style.display='none';document.getElementById('vid-fallback').style.display='flex'"
+        >
+          <!-- O vídeo será carregado assim que o Polares publicar no repositório -->
+          <source src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/gamejam.mp4" type="video/mp4">
+          <source src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/video.mp4" type="video/mp4">
+          <source src="https://raw.githubusercontent.com/Polaris-2025/NRG-Studios/main/trailer.mp4" type="video/mp4">
         </video>
+        <div class="credits-video-placeholder" id="vid-fallback" style="display:flex">
+          <span>🎬</span>
+          <p>Vídeo da Game Jam</p>
+          <small>Disponível em breve</small>
+        </div>
         <div class="credits-video-overlay">
           <span class="credits-video-label">NRG Studios × Polares</span>
         </div>
@@ -604,7 +614,7 @@ footer{
 
 <div class="divider"></div>
 <footer>
-  <p>© 2026 NRG Studios · Desenvolvido por <a href="https://polaris-2025.github.io/NRG-Studios/" target="_blank" rel="noopener noreferrer" style="color:var(--sub);text-decoration:underline;text-underline-offset:3px">Polares</a></p>
+  <p>© 2026 NRG Studios · Portal por <a href="https://polaris-2025.github.io/NRG-Studios/" target="_blank" rel="noopener noreferrer" style="color:var(--sub);text-decoration:underline;text-underline-offset:3px">Polares</a></p>
 </footer>
 
 <!-- CHATBOT -->
